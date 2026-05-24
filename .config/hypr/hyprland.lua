@@ -2,10 +2,10 @@
 
 -- Load user modules from ~/.config and Omarchy defaults from $OMARCHY_PATH.
 package.path = os.getenv("HOME")
-  .. "/.config/?.lua;"
-  .. (os.getenv("OMARCHY_PATH") or (os.getenv("HOME") .. "/.local/share/omarchy"))
-  .. "/?.lua;"
-  .. package.path
+	.. "/.config/?.lua;"
+	.. (os.getenv("OMARCHY_PATH") or (os.getenv("HOME") .. "/.local/share/omarchy"))
+	.. "/?.lua;"
+	.. package.path
 
 -- All Omarchy default setups
 require("default.hypr.omarchy")
@@ -22,3 +22,5 @@ require("default.hypr.toggles")
 
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
+o.window({ title = "Steam", class = "steam" }, { tile = true })
+o.window({ title = "steam" }, { float = true })
