@@ -8,10 +8,11 @@
 
 # 3. Permitir que Git explore las carpetas estructurales
 !.config/
-!.config/scripts/
+!.config/*/
 !.local/
 !.local/share/
 
 # 4. Carpetas y archivos específicos que ya estás siguiendo (según tu historial)
-!.config/hypr/
-!.config/waybar/
+!.config/hypr/**
+!.config/waybar/**
+!.config/scripts/**
