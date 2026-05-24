@@ -1,0 +1,16 @@
+# 1. Ignorar absolutamente todo por defecto
+*
+
+# 2. Archivos base permitidos en la raíz de la Home
+!.gitignore
+!.gitconfig
+!.bashrc
+
+# 3. Permitir que Git explore las carpetas estructurales
+!.config/
+!.local/
+!.local/share/
+
+# 4. Carpetas y archivos específicos que ya estás siguiendo (según tu historial)
+!.config/hypr/
+!.config/waybar/
