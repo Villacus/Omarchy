@@ -50,9 +50,13 @@ for carpeta in "$WALLPAPER_PATH"/*; do
       "$carpeta" &>/dev/null &
     WPE_PID=$!
 
-    # Esperar a que aparezca el screenshot o timeout (45s)
+    # Esperar a que aparezca el screenshot, que el proceso muera, o timeout (45s)
     for i in $(seq 45); do
       if [[ -f "$OUTPUT" ]]; then
+        break
+      fi
+      if ! kill -0 "$WPE_PID" 2>/dev/null; then
+        sleep 1
         break
       fi
       sleep 1
