@@ -6,12 +6,16 @@ ASSETS_DIR="/mnt/Games/SteamLibrary/steamapps/common/wallpaper_engine/assets"
 
 mkdir -p "$WALLPAPER_DIR"
 
-# Limpiar previews de wallpapers que ya no existen en el taller
+# Limpiar formatos antiguos (jpg, gif, etc.) y previews de wallpapers que ya no existen
 echo "Limpiando previews obsoletas..."
-for preview in "$WALLPAPER_DIR"/wallpaper_*.png; do
+for preview in "$WALLPAPER_DIR"/wallpaper_*.*; do
   [[ -f "$preview" ]] || continue
-  id=$(basename "$preview" | sed 's/^wallpaper_//;s/\.png$//')
-  if [[ ! -d "$WALLPAPER_PATH/$id" ]]; then
+  id=$(basename "$preview" | sed 's/^wallpaper_//;s/\.[^.]*$//')
+  ext="${preview##*.}"
+  if [[ "$ext" != "png" ]]; then
+    rm -f "$preview"
+    echo "  ✀ eliminado $(basename "$preview") (formato antiguo)"
+  elif [[ ! -d "$WALLPAPER_PATH/$id" ]]; then
     rm -f "$preview"
     echo "  ✀ eliminado wallpaper_$id.png (ya no existe en el taller)"
   fi
