@@ -12,5 +12,3 @@ source ~/.local/share/omarchy/default/bash/rc
 fastfetch
 alias clear='clear && fastfetch'
 export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.local/share/omarchy/bin-custom:$PATH"
-alias omarchy-theme-bg-switcher='~/.local/share/omarchy/bin-custom/omarchy-theme-bg-switcher'
