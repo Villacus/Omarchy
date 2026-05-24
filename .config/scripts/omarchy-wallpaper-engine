@@ -60,4 +60,9 @@ echo $WPID > "$PID_FILE"
 # Mantener también el .pid legacy por compatibilidad
 echo $WPID > "$HOME/.config/omarchy/current/wallpaper-engine.pid"
 
+# Guardar asignacion para restaurar al encender
+CONFIG_FILE="$HOME/.config/omarchy/current/wallpapers.conf"
+sed -i "/^$MONITOR:/d" "$CONFIG_FILE" 2>/dev/null
+echo "$MONITOR:wallpaper-engine:$WALLPAPER_ID" >> "$CONFIG_FILE"
+
 echo "✓ Wallpaper en ejecución (PID: $WPID) en $MONITOR"
