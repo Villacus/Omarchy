@@ -70,8 +70,8 @@ for carpeta in "$WALLPAPER_PATH"/*; do
     wait $WPE_PID 2>/dev/null
 
     if [[ -f "$OUTPUT" ]]; then
-      # Redimensionar a 640x360 manteniendo aspect ratio con relleno negro
-      magick "$OUTPUT" -resize 640x360 -background black -gravity center -extent 640x360 "$OUTPUT"
+      # Redimensionar solo si es mas grande que 640x360, sino solo centrar con relleno
+      magick "$OUTPUT" -resize 640x360\> -background black -gravity center -extent 640x360 "$OUTPUT"
       echo "  ✓ $ID"
     else
       echo "  ✗ $ID (error)"
