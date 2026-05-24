@@ -1,0 +1,64 @@
+# --- Archivos del Sistema / Historiales de Terminal ---
+.bash_history
+.zsh_history
+.fish_history
+.lesshst
+.Xauthority
+.XCompose
+.xsession-errors
+.wget-hsts
+.node_repl_history
+.python_history
+.sqlite_history
+.pki/
+.gnupg/
+.ssh/
+
+# --- Carpetas de Datos Grandes, Cachés y Temporales (XDG) ---
+.cache/
+.local/share/Steam/
+.local/share/Trash/
+.local/share/gvfs-metadata/
+.local/share/recently-used.xbel
+.local/state/
+.npm/
+.cargo/
+.dotnet/
+.pi/
+
+# --- Configuraciones de Aplicaciones con Datos Privados o Sesiones ---
+.config/discord/
+.config/google-chrome/
+.config/chromium-flags.conf
+.config/Code/User/History/
+.config/Code/User/workspaceStorage/
+.config/obsidian/
+.config/dconf/
+.config/pulse/
+.pulse-cookie
+.config/ibus/
+
+# --- Directorios de Usuario por Defecto ---
+Descargas/
+Documentos/
+Escritorio/
+Música/
+Imágenes/
+Vídeos/
+Plantillas/
+Público/
+bin/
+
+# --- Archivos de Configuración de IDEs / Editores Locales ---
+.vscode/
+.vscode-shared/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Logs y Archivos de Bloqueo ---
+*.log
+*.lock
+pnpm-lock.yaml
+package-lock.json
