@@ -10,19 +10,19 @@
     "hyprland/workspaces"
   ],
   "modules-center": [
-    "clock#horizontal",
     "clock#vertical",
     "custom/update",
     "custom/voxtype",
     "custom/idle-indicator",
     "custom/notification-silencing-indicator",
-    "mpris"
+    "group/clock-player"
   ],
   "modules-right": [
     "group/tray-expander",
     "bluetooth",
     "network",
     "pulseaudio",
+    "privacy",
     "custom/separator",
     "cpu",
     "memory",
@@ -114,11 +114,32 @@
     "on-click": "omarchy-system-shutdown",
     "tooltip": false
   },
-  "mpris": {
-    "format": "▶ {title}",
-    "format-paused": "⏸ {title}",
-    "ignored-players": ["zen", "chromium"],
-    "max-length": 30,
+  "group/clock-player": {
+    "orientation": "inherit",
+    "modules": ["clock#horizontal", "custom/prev", "custom/playpause", "custom/next"]
+  },
+
+  "custom/prev": {
+    "exec": "$HOME/.config/scripts/prev.sh",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "busctl --user call org.mpris.MediaPlayer2.cliamp /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player Previous",
+    "tooltip": false
+  },
+
+  "custom/playpause": {
+    "exec": "$HOME/.config/scripts/playpause.sh",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "busctl --user call org.mpris.MediaPlayer2.cliamp /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player PlayPause",
+    "tooltip": false
+  },
+
+  "custom/next": {
+    "exec": "$HOME/.config/scripts/next.sh",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "busctl --user call org.mpris.MediaPlayer2.cliamp /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player Next",
     "tooltip": false
   },
   "clock#horizontal": {
@@ -134,7 +155,7 @@
     "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select"
   },
   "custom/weather": {
-    "exec": "$OMARCHY_PATH/default/waybar/weather.sh",
+    "exec": "$OMARCHY_PATH/default/weather.sh",
     "return-type": "json",
     "interval": 60,
     "tooltip": false,
@@ -195,6 +216,9 @@
       "default": ["", "", ""]
     }
   },
+  "privacy": {
+    "icon-size": 11
+  },
   "group/tray-expander": {
     "orientation": "inherit",
     "drawer": {
@@ -226,19 +250,19 @@
   },
   "custom/screenrecording-indicator": {
     "on-click": "omarchy-capture-screenrecording",
-    "exec": "$OMARCHY_PATH/default/waybar/indicators/screen-recording.sh",
+    "exec": "$OMARCHY_PATH/default/indicators/screen-recording.sh",
     "signal": 8,
     "return-type": "json"
   },
   "custom/idle-indicator": {
     "on-click": "omarchy-toggle-idle",
-    "exec": "$OMARCHY_PATH/default/waybar/indicators/idle.sh",
+    "exec": "$OMARCHY_PATH/default/indicators/idle.sh",
     "signal": 9,
     "return-type": "json"
   },
   "custom/notification-silencing-indicator": {
     "on-click": "omarchy-toggle-notification-silencing",
-    "exec": "$OMARCHY_PATH/default/waybar/indicators/notification-silencing.sh",
+    "exec": "$OMARCHY_PATH/default/indicators/notification-silencing.sh",
     "signal": 10,
     "return-type": "json"
   },
