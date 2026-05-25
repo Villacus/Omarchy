@@ -228,27 +228,37 @@ tooltip {
 }
 
 #mpris,
-#custom-mpris,
+#custom-mpris {
+    color: #a6e3a1;
+    padding: 0 12px;
+    margin: 0 2px;
+    border-radius: 8px;
+}
+
 #custom-prev,
 #custom-playpause,
 #custom-next {
     color: #a6e3a1;
-    padding: 0 6px;
-    margin: 0 2px;
-    border-radius: 8px;
+    border-radius: 6px;
     min-width: 0;
+    opacity: 0;
+    font-size: 0;
+    padding: 0;
+    margin: 0;
 }
 
-/* Show player controls only when hovering clock area */
-#custom-prev,
-#custom-playpause,
-#custom-next {
+#clock-player:hover {
+    border: 1px solid rgba(205, 214, 244, 0.3);
+    border-radius: 8px;
+    padding: 0 2px;
+}
+
+#clock-player:hover #clock {
     opacity: 0;
     font-size: 0;
     padding: 0;
     margin: 0;
     min-width: 0;
-    min-height: 0;
 }
 
 #clock-player:hover #custom-prev,
@@ -256,8 +266,33 @@ tooltip {
 #clock-player:hover #custom-next {
     opacity: 1;
     font-size: 12px;
-    padding: 0 6px;
-    margin: 0 2px;
+    padding: 0 5px;
+    margin: 0 1px;
+    min-width: 12px;
+}
+
+#custom-prev:hover,
+#custom-playpause:hover,
+#custom-next:hover {
+    background: rgba(166, 227, 161, 0.15);
+    color: #ffffff;
+}
+
+#clock-player:hover #clock {
+    opacity: 0;
+    font-size: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+
+#clock-player:hover #custom-prev,
+#clock-player:hover #custom-playpause,
+#clock-player:hover #custom-next {
+    opacity: 1;
+    font-size: 12px;
+    padding: 0 5px;
+    margin: 0 1px;
     min-width: 12px;
 }
 
@@ -271,5 +306,4 @@ tooltip {
 #privacy {
   min-width: 12px;
   margin: 0 7.5px;
-  font-size: 10px;
 }
