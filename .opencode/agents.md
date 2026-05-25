@@ -18,6 +18,8 @@
 - Los comandos del sistema (`omarchy-*`) se ejecutan desde `~/.local/share/omarchy/bin/` — no tocarlos.
 - Si hay que modificar el comportamiento de un comando omarchy, crear un wrapper en `~/.config/scripts/` o editar los archivos de configuración correspondientes en `~/.config/`.
 - **En caso de duda, consultar el repo de omarchy (`https://github.com/basecamp/omarchy`) o su web `https://omarchy.org`** — no asumir rutas, flags o comportamientos.
+- **Omarchy usa Lua en vez de conf para hyprland**: `hyprland.lua`, `looknfeel.lua`, etc. con `hl.config({...})` y `hl.env("VAR","value")`.
+- **No borrar branches ni commits sin permiso del usuario**.
 
 ### Cómo extender omarchy sin tocar /bin
 
@@ -34,12 +36,19 @@
 | `~/.config/hypr/monitors.lua` | Monitores, resoluciones, posiciones |
 | `~/.config/hypr/autostart.lua` | Programas que se lanzan al iniciar |
 | `~/.config/hypr/bindings.lua` | Keybindings |
-| `~/.config/hypr/looknfeel.lua` | Apariencia (gaps, bordes, etc.) |
+| `~/.config/hypr/looknfeel.lua` | Apariencia (gaps, bordes, env vars) |
+| `~/.config/hypr/hyprlock.conf` | Pantalla de bloqueo (input field, blur, fondo) |
+| `~/.config/hypr/hypridle.conf` | Tiempos de inactividad (screensaver, lock, apagado pantalla) |
 | `~/.config/omarchy/current/` | Tema activo actual (symlinks y configs) |
 | `~/.config/omarchy/current/wallpapers.conf` | Asignación de wallpapers por monitor para restaurar al encender |
+| `~/.config/omarchy/current/background` | Symlink al wallpaper activo (usado por hyprlock) |
+| `~/.config/omarchy/backgrounds/` | Fondos de usuario (theme-agnostic y por tema) |
+| `~/.config/omarchy/extensions/menu.sh` | Sourced por omarchy-menu, permite override de funciones |
+| `~/.local/state/omarchy/toggles/hyprlock.conf` | Toggles dinámicos de omarchy para hyprlock (CREA input-field duplicado) |
 | `~/.config/scripts/` | Scripts personalizados del usuario |
 | `~/.config/waybar/` | Barra de estado |
 | `~/.config/walker/` | Lanzador de aplicaciones |
+| `~/.local/share/icons/` | Iconos y cursores instalados manualmente |
 
 ## Sistema de wallpapers
 
@@ -54,11 +63,11 @@
 | Script | Función |
 |---|---|
 | `restore-wallpapers` | Restaura todos los wallpapers al iniciar Hyprland (lee wallpapers.conf) |
-| `omarchy-background-selector` | Selector interactivo de wallpaper por monitor |
+| `omarchy-background-selector` | Selector interactivo de wallpaper por monitor. Busca en: current/theme/backgrounds, backgrounds/$theme_name, backgrounds/wallpaper-engine |
 | `omarchy-theme-bg-switcher` | Symlink a `omarchy-background-selector` |
-| `omarchy-wallpaper-engine` | Ejecuta `linux-wallpaperengine` para un wallpaper animado |
+| `omarchy-wallpaper-engine` | Ejecuta `linux-wallpaperengine` para un wallpaper animado. También actualiza current/background → preview para lockscreen |
 | `set-wallpaper-engine` | Wrapper con logging |
-| `setup-wallpaper-engine-previews.sh` | Genera screenshots 1920x1080 de todos los wallpapers del taller |
+| `setup-wallpaper-engine-previews.sh` | Genera screenshots 1920x1080 de todos los wallpapers del taller usando `--screenshot` |
 
 ### Persistencia al encender
 
@@ -69,8 +78,34 @@
 
 - **Workshop path**: `/mnt/Games/SteamLibrary/steamapps/workshop/content/431960/`
 - **Assets dir**: `/mnt/Games/SteamLibrary/steamapps/common/wallpaper_engine/assets/`
-- **Previews**: `~/.config/omarchy/themes/wallpaper-engine/backgrounds/` (todos a 1920x1080)
+- **Previews**: `~/.config/omarchy/backgrounds/wallpaper-engine/` (todos a 1920x000)
 - **Regenerar**: `bash ~/.config/scripts/setup-wallpaper-engine-previews.sh`
-- Captura uno por uno con `--window` + `grim`. Los que crashean el engine (scripts rotos, errores JS/JSON) usan fallback del preview original del taller.
-- El engine está compilado solo para Wayland (`-DENABLE_X11=OFF`). No se puede renderizar en Xvfb. El flag `--screenshot` tiene el bug de `Failed to initialize GLEW: No GLX display` pero igual genera la imagen (no bloqueante).
-- `--window` para renderizar en ventana funciona en Wayland nativo, combinado con `grim -g X,Y WxH` para capturar el monitor a resolución completa.
+- Captura uno por uno con `--screenshot` (sin UI/waybar visible) + `magick -resize 1920x1080!` para forzar resolución exacta sin bordes negros.
+- Los que crashean el engine (scripts rotos, errores JS/JSON) usan fallback del preview original del taller (`$carpeta/preview.png/jpg/gif`).
+- El engine está compilado solo para Wayland (`-DENABLE_X11=OFF`). No se puede renderizar en Xvfb.
+- El flag `--screenshot` tiene el bug de `Failed to initialize GLEW: No GLX display` pero igual genera el archivo (no bloqueante). Se resuelve con `-resize 1920x1080!`.
+- **IMPORTANTE**: las previews se movieron de `themes/wallpaper-engine/backgrounds/` a `backgrounds/wallpaper-engine/` para que wallpaper-engine no aparezca como tema en omarchy.
+
+### Lockscreen (hyprlock)
+
+- Config en `~/.config/hypr/hyprlock.conf` (no tocar `~/.local/share/omarchy/config/hypr/hyprlock.conf`).
+- Soursea colores del tema desde `~/.config/omarchy/current/theme/hyprlock.conf`.
+- **NO sourcear `~/.local/state/omarchy/toggles/hyprlock.conf`** porque crea un SEGUNDO bloque `input-field` con valores default (centro, 650x100, sin fade) que se superpone al personalizado.
+- El toggle `omarchy-style-corners-hyprlock` escribe rounding en el toggles file, pero al no sourcearlo se pierde esa funcionalidad — poner `rounding = N` directamente en hyprlock.conf.
+- `blur_passes` controla el desenfoque del fondo: 0 = sin blur, 3 = default omarchy.
+- `fade_on_empty = true` oculta el input hasta escribir (puede no funcionar bien en v0.9.5).
+- `valign = bottom` + `position = 0, -N` mueve el input hacia abajo.
+- Para que al iniciar sesión pida contraseña: `o.launch_on_start("hyprlock")` en `autostart.lua`.
+
+### Cursor theme
+
+- Sweet Nova cursors instalados en `~/.local/share/icons/Sweet-cursors/` desde `https://github.com/EliverLara/Sweet/tree/nova/kde/cursors/Sweet-cursors`.
+- Para activar: `hl.env("XCURSOR_THEME", "Sweet-cursors")` en `looknfeel.lua` y `gtk-cursor-theme-name=Sweet-cursors` en `gtk-3.0/settings.ini` y `gtk-4.0/settings.ini`.
+- También `hyprctl setcursor Sweet-cursors 24` para aplicar al instante sin reiniciar.
+
+### Persistencia del wallpaper en lockscreen
+
+- `current/background` es un symlink que usa hyprlock para mostrar el fondo en pantalla de bloqueo.
+- `omarchy-theme-bg-set` lo actualiza para wallpapers estáticos.
+- `omarchy-wallpaper-engine` lo actualiza al preview correspondiente cuando se selecciona un wallpaper animado.
+- `restore-wallpapers` también lo actualiza al restaurar (tanto estáticos como animados).
