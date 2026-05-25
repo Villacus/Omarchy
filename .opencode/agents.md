@@ -109,3 +109,27 @@
 - `omarchy-theme-bg-set` lo actualiza para wallpapers estáticos.
 - `omarchy-wallpaper-engine` lo actualiza al preview correspondiente cuando se selecciona un wallpaper animado.
 - `restore-wallpapers` también lo actualiza al restaurar (tanto estáticos como animados).
+
+## Aprendizajes técnicos (CLIAMP / WAYBAR / VOLUMEN)
+
+### MPRIS Volume vs cliamp IPC
+- cliamp mapea dB a MPRIS Volume mediante `dbToLinear`/`linearToDb`: -30dB → 0.0, +6dB → 1.0.
+- **MPRIS Volume NO puede bajar de -30dB** — valores menores se clampa a 0.
+- Para controlar el rango completo (-50dB a +6dB) usar `cliamp volume <dB>` (IPC por socket Unix).
+- `cliamp status --json` devuelve `"volume": <dB>`, pero **omite el campo** cuando vale 0 dB.
+- El IPC y MPRIS convergen al mismo estado interno: cambios por IPC actualizan MPRIS Volume y viceversa.
+- `wpctl set-volume` controla el volumen del stream de PipeWire, NO el volumen interno de la app. Cambiar uno sin el otro desincroniza.
+
+### Waybar scroll en botones
+- `on-scroll-up` / `on-scroll-down` en módulos custom ejecutan scripts al scrollear.
+- Para pasos perceptualmente uniformes, usar factor multiplicativo: paso en dB = `20*log10(factor)`. Factor 1.10 → 0.83 dB/scroll.
+
+### git history management
+- Para limpiar commits de prueba/error: `git reset --soft <base-commit> && git commit -m "mensaje"` aplasta todo el working tree en un solo commit.
+- Si `git rebase -i` se cuelga (SIGTERM del editor): `git rebase --abort` y usar reset --soft en su lugar.
+
+### omarchy restart waybar
+- `omarchy restart waybar` a veces cuelga (no mata el proceso); alternativa manual: `pkill -x waybar && waybar &`.
+
+## Regla final para agentes
+- **Si aprendes algo nuevo sobre el sistema del usuario** (rutas, configs, bugs, workarounds, comportamiento de programas), **documéntalo aquí inmediatamente**. No esperes a que te lo pidan. Esto asegura que el conocimiento persista entre sesiones.
