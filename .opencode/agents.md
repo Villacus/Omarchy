@@ -17,7 +17,7 @@
 - Los scripts personalizados van en `~/.config/scripts/`.
 - Los comandos del sistema (`omarchy-*`) se ejecutan desde `~/.local/share/omarchy/bin/` — no tocarlos.
 - Si hay que modificar el comportamiento de un comando omarchy, crear un wrapper en `~/.config/scripts/` o editar los archivos de configuración correspondientes en `~/.config/`.
-- **En caso de duda, consultar el repo de omarchy (`https://github.com/anomalyco/omarchy`) o su documentación en `https://omarchy.ai`** — no asumir rutas, flags o comportamientos.
+- **En caso de duda, consultar el repo de omarchy (`https://github.com/basecamp/omarchy`) o su web `https://omarchy.org`** — no asumir rutas, flags o comportamientos.
 
 ## Archivos de configuración clave
 
