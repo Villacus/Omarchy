@@ -10,6 +10,7 @@ o.bind("SUPER + SHIFT + M", "Music TUI", { tui = "cliamp", focus = true })
 o.bind("SUPER + SHIFT + N", "Editor", { omarchy = "editor" })
 o.bind("SUPER + SHIFT + D", "Docker", { tui = "lazydocker" })
 o.bind("SUPER + SHIFT + O", "Obsidian", { launch = "obsidian", focus = "^obsidian$" })
+o.bind("SUPER + SHIFT + V", "VSCode", { launch = "code", focus = "^code$" })
 o.bind("SUPER + SHIFT + H", "Steam", { launch = "steam", focus = "^steam$" })
 o.bind("SUPER + SHIFT + I", "Discord", { launch = "discord", focus = "^discord$" })
 
