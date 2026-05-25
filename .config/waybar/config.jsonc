@@ -74,7 +74,8 @@
   },
   "custom/separator": {
     "format": "|",
-    "interval": "once"
+    "interval": "once",
+    "tooltip": false
   },
   "cpu": {
     "interval": 5,
