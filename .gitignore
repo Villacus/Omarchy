@@ -20,3 +20,8 @@
 !.config/gtk-*/**
 !.opencode/
 !.opencode/**
+!.local/bin/
+!.local/bin/**
+!.config/cliamp/
+!.config/cliamp/playlists/
+!.config/cliamp/playlists/**
