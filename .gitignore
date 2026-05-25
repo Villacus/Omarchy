@@ -16,5 +16,6 @@
 !.config/hypr/**
 !.config/waybar/**
 !.config/scripts/**
+!.config/omarchy/**
 !.opencode/
 !.opencode/**
