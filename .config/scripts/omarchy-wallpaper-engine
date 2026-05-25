@@ -65,4 +65,10 @@ CONFIG_FILE="$HOME/.config/omarchy/current/wallpapers.conf"
 sed -i "/^$MONITOR:/d" "$CONFIG_FILE" 2>/dev/null
 echo "$MONITOR:wallpaper-engine:$WALLPAPER_ID" >> "$CONFIG_FILE"
 
+# Actualizar symlink del lockscreen
+PREVIEW_FILE="$HOME/.config/omarchy/backgrounds/wallpaper-engine/wallpaper_$WALLPAPER_ID.png"
+if [[ -f "$PREVIEW_FILE" ]]; then
+  ln -sf "$PREVIEW_FILE" "$HOME/.config/omarchy/current/background"
+fi
+
 echo "✓ Wallpaper en ejecución (PID: $WPID) en $MONITOR"

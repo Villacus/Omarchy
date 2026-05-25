@@ -27,6 +27,7 @@ while IFS=: read -r monitor type value; do
     if [[ -f "$value" ]]; then
       setsid uwsm-app -- swaybg -o "$monitor" -i "$value" -m fill >/dev/null 2>&1 &
       echo "[$(date)]   -> swaybg en $monitor" >> "$LOG_FILE"
+      ln -sf "$value" "$HOME/.config/omarchy/current/background"
     else
       echo "[$(date)]   -> ERROR: archivo no existe: $value" >> "$LOG_FILE"
     fi
@@ -35,5 +36,4 @@ while IFS=: read -r monitor type value; do
   fi
 done < "$CONFIG_FILE"
 
-# Si no hay entradas wallpaper-engine, asegurar que el symlink apunte al static del ultimo monitor
 echo "[$(date)] Restauracion completa" >> "$LOG_FILE"
