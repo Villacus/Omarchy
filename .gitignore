@@ -17,5 +17,6 @@
 !.config/waybar/**
 !.config/scripts/**
 !.config/omarchy/**
+!.config/gtk-*/**
 !.opencode/
 !.opencode/**

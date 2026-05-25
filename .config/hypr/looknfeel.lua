@@ -48,3 +48,6 @@ hl.config({
 --     column_width = 0.97,
 --   },
 -- })
+
+-- Sweet Nova cursor theme
+hl.env("XCURSOR_THEME", "Sweet-cursors")
