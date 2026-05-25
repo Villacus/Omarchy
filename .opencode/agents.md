@@ -129,7 +129,7 @@
 - Si `git rebase -i` se cuelga (SIGTERM del editor): `git rebase --abort` y usar reset --soft en su lugar.
 
 ### omarchy restart waybar
-- `omarchy restart waybar` a veces cuelga (no mata el proceso); alternativa manual: `pkill -x waybar && waybar &`.
+- `omarchy restart waybar`.
 
 ## Regla final para agentes
 - **Si aprendes algo nuevo sobre el sistema del usuario** (rutas, configs, bugs, workarounds, comportamiento de programas), **documéntalo aquí inmediatamente**. No esperes a que te lo pidan. Esto asegura que el conocimiento persista entre sesiones.
