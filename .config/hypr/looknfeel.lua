@@ -17,7 +17,7 @@ hl.config({
 hl.config({
 	decoration = {
 		-- Use round window corners.
-		rounding = 8,
+		rounding = 12,
 
 		-- Dim unfocused windows (0.0 = no dim, 1.0 = fully dimmed).
 		dim_inactive = true,
@@ -28,10 +28,13 @@ hl.config({
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#animations
 hl.config({
 	animations = {
-		-- Disable all animations.
 		enabled = true,
 	},
 })
+
+-- Enable workspace switching animation (disabled by default in omarchy).
+-- https://wiki.hypr.land/Configuring/Advanced-and-Cool/Animations/
+hl.animation({ leaf = "workspaces", enabled = true, speed = 5, bezier = "easeOutQuint", style = "slide" })
 
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#layout
 -- hl.config({

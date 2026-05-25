@@ -24,3 +24,6 @@ require("default.hypr.toggles")
 -- o.window("qemu", { workspace = "5" })
 o.window({ title = "Steam", class = "steam" }, { tile = true })
 o.window({ title = "steam" }, { float = true })
+
+-- Disable blur and dimming on fullscreen windows for performance.
+o.window({ fullscreen = true }, { blur = false, dim = false })
