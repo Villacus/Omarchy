@@ -1,48 +1,66 @@
 # AGENTS - Configuración de villacus
 
-## Reglas generales
+## Sistema
 
-- **NO editar scripts en `/home/villacus/.local/share/omarchy/bin/`** — son parte de omarchy y se actualizan con el sistema.
+- **SO**: CachyOS (Arch Linux)
+- **WM**: Hyprland (Wayland)
+- **Shell**: bash
+- **Repo**: home directory entera (`/home/villacus/`)
+- **Omarchy**: framework de gestión de configuración de escritorio Linux
+- **Monitor principal**: DP-2 (1920x1080@180 en 1600x0)
+- **Monitor secundario**: DP-3 (1600x900@60 en 0x180)
+
+## Reglas de edición
+
+- **NO editar nada en `~/.local/share/omarchy/`** — es el código base de omarchy, se sobreescribe con cada actualización. Cualquier cambio ahí se pierde.
+- **Omarchy lee de `~/.config/`** — las configs activas están en `~/.config/omarchy/`, `~/.config/hypr/`, etc. Ahí es donde se sobreescriben y personalizan las cosas.
 - Los scripts personalizados van en `~/.config/scripts/`.
-- No modificar archivos de sistema ni de omarchy directamente.
-- Los wallpapers estáticos los gestiona omarchy (`omarchy-theme-bg-set`). Los animated (Wallpaper Engine) tienen su propio sistema.
+- Los comandos del sistema (`omarchy-*`) se ejecutan desde `~/.local/share/omarchy/bin/` — no tocarlos.
+- Si hay que modificar el comportamiento de un comando omarchy, crear un wrapper en `~/.config/scripts/` o editar los archivos de configuración correspondientes en `~/.config/`.
+
+## Archivos de configuración clave
+
+| Ruta | Propósito |
+|---|---|
+| `~/.config/hypr/hyprland.lua` | Config principal de Hyprland |
+| `~/.config/hypr/monitors.lua` | Monitores, resoluciones, posiciones |
+| `~/.config/hypr/autostart.lua` | Programas que se lanzan al iniciar |
+| `~/.config/hypr/bindings.lua` | Keybindings |
+| `~/.config/hypr/looknfeel.lua` | Apariencia (gaps, bordes, etc.) |
+| `~/.config/omarchy/current/` | Tema activo actual (symlinks y configs) |
+| `~/.config/omarchy/current/wallpapers.conf` | Asignación de wallpapers por monitor para restaurar al encender |
+| `~/.config/scripts/` | Scripts personalizados del usuario |
+| `~/.config/waybar/` | Barra de estado |
+| `~/.config/walker/` | Lanzador de aplicaciones |
 
 ## Sistema de wallpapers
 
-### Archivos clave en `~/.config/scripts/`
+### Gestión
+
+- **Estáticos**: `omarchy-theme-bg-set <ruta> [MONITOR]` — usa `swaybg`, guarda symlink en `~/.config/omarchy/current/background`
+- **Animados (Wallpaper Engine)**: `omarchy-wallpaper-engine <ID> [MONITOR]` — usa `linux-wallpaperengine`, guarda PID por monitor
+- **Selector interactivo**: `omarchy-background-selector` — menú para elegir wallpaper y asignarlo a un monitor
+
+### Archivos en `~/.config/scripts/`
 
 | Script | Función |
 |---|---|
-| `restore-wallpapers` | Restaura todos los wallpapers al iniciar Hyprland. Se lanza desde `~/.config/hypr/autostart.lua` |
-| `omarchy-background-selector` | Selector interactivo de wallpaper por monitor (estático o wallpaper engine) |
+| `restore-wallpapers` | Restaura todos los wallpapers al iniciar Hyprland (lee wallpapers.conf) |
+| `omarchy-background-selector` | Selector interactivo de wallpaper por monitor |
 | `omarchy-theme-bg-switcher` | Symlink a `omarchy-background-selector` |
-| `omarchy-wallpaper-engine` | Ejecuta `linux-wallpaperengine` para un wallpaper animado en un monitor |
-| `set-wallpaper-engine` | Wrapper de `omarchy-wallpaper-engine` con logging |
-| `setup-wallpaper-engine-previews.sh` | Genera screenshots 1920x1080 de todos los wallpapers del taller para el selector |
+| `omarchy-wallpaper-engine` | Ejecuta `linux-wallpaperengine` para un wallpaper animado |
+| `set-wallpaper-engine` | Wrapper con logging |
+| `setup-wallpaper-engine-previews.sh` | Genera screenshots 1920x1080 de todos los wallpapers del taller |
 
 ### Persistencia al encender
 
-- `~/.config/omarchy/current/wallpapers.conf` guarda las asignaciones por monitor con formato `MONITOR:TIPO:VALOR`.
-- `restore-wallpapers` lee ese archivo al arranque y restaura cada wallpaper en su monitor.
-- `autostart.lua` ejecuta `restore-wallpapers` al inicio de Hyprland.
+- Cada vez que se selecciona un wallpaper, se guarda en `wallpapers.conf` con formato `MONITOR:TIPO:VALOR`.
+- Al arrancar, `autostart.lua` ejecuta `~/.config/scripts/restore-wallpapers`, que lee el archivo y aplica cada wallpaper en su monitor.
 
 ### Wallpaper Engine
 
-- Workshop path: `/mnt/Games/SteamLibrary/steamapps/workshop/content/431960/`
-- Assets dir: `/mnt/Games/SteamLibrary/steamapps/common/wallpaper_engine/assets/`
-- Previews generados en: `~/.config/omarchy/themes/wallpaper-engine/backgrounds/` (todos a 1920x1080)
-- Para regenerar previews: `bash ~/.config/scripts/setup-wallpaper-engine-previews.sh`
-- El script captura cada wallpaper uno por uno con `--window` + `grim`, mostrando ventanas en pantalla. Los que crashean el engine usan fallback del preview del taller.
-- Algunos wallpapers del taller tienen scripts rotos (ReferenceError, SyntaxError) y no se pueden capturar; usan la preview original como fallback.
-
-### Monitor config
-
-Monitores definidos en `~/.config/hypr/monitors.lua`:
-- DP-3 (izquierda): 1600x900@60 en 0x180
-- DP-2 (derecha): 1920x1080@180 en 1600x0 (monitor principal para capturas)
-
-### Autostart
-
-`~/.config/hypr/autostart.lua`:
-- `hyprsunset` — filtro de luz azul
-- `~/.config/scripts/restore-wallpapers` — restaura wallpapers al iniciar
+- **Workshop path**: `/mnt/Games/SteamLibrary/steamapps/workshop/content/431960/`
+- **Assets dir**: `/mnt/Games/SteamLibrary/steamapps/common/wallpaper_engine/assets/`
+- **Previews**: `~/.config/omarchy/themes/wallpaper-engine/backgrounds/` (todos a 1920x1080)
+- **Regenerar**: `bash ~/.config/scripts/setup-wallpaper-engine-previews.sh`
+- Captura uno por uno con `--window` + `grim`. Los que crashean el engine (scripts rotos) usan fallback del preview original del taller.
