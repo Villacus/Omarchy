@@ -19,6 +19,13 @@
 - Si hay que modificar el comportamiento de un comando omarchy, crear un wrapper en `~/.config/scripts/` o editar los archivos de configuración correspondientes en `~/.config/`.
 - **En caso de duda, consultar el repo de omarchy (`https://github.com/basecamp/omarchy`) o su web `https://omarchy.org`** — no asumir rutas, flags o comportamientos.
 
+### Cómo extender omarchy sin tocar /bin
+
+- `~/.config/omarchy/extensions/menu.sh` es **sourced por `omarchy-menu`** al final del script. Ahí se pueden redefinir funciones del menú (como `show_background_menu()`) para cambiar su comportamiento sin editar `/bin`.
+- El menú usa `omarchy-theme-bg-switcher` para backgrounds. Se overrideo `show_background_menu()` para llamar a `~/.config/scripts/omarchy-background-selector` en vez del original.
+- El PATH de omarchy se define en `~/.config/uwsm/env`: `export PATH=$OMARCHY_PATH/bin:$PATH:$HOME/.local/bin`. Para que scripts de `~/.config/scripts/` tengan prioridad, habría que ponerlos antes que omarchy/bin en el PATH.
+- Los comandos `omarchy-*` se resuelven desde `~/.local/share/omarchy/bin/` primero por el PATH. Para reemplazar uno, crear wrapper con el mismo nombre en `~/.config/scripts/` y poner ese directorio antes en el PATH.
+
 ## Archivos de configuración clave
 
 | Ruta | Propósito |
@@ -64,4 +71,6 @@
 - **Assets dir**: `/mnt/Games/SteamLibrary/steamapps/common/wallpaper_engine/assets/`
 - **Previews**: `~/.config/omarchy/themes/wallpaper-engine/backgrounds/` (todos a 1920x1080)
 - **Regenerar**: `bash ~/.config/scripts/setup-wallpaper-engine-previews.sh`
-- Captura uno por uno con `--window` + `grim`. Los que crashean el engine (scripts rotos) usan fallback del preview original del taller.
+- Captura uno por uno con `--window` + `grim`. Los que crashean el engine (scripts rotos, errores JS/JSON) usan fallback del preview original del taller.
+- El engine está compilado solo para Wayland (`-DENABLE_X11=OFF`). No se puede renderizar en Xvfb. El flag `--screenshot` tiene el bug de `Failed to initialize GLEW: No GLX display` pero igual genera la imagen (no bloqueante).
+- `--window` para renderizar en ventana funciona en Wayland nativo, combinado con `grim -g X,Y WxH` para capturar el monitor a resolución completa.
