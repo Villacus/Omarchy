@@ -28,8 +28,8 @@ o.bind("SUPER + SHIFT + S", "Screenshot area to clipboard", "omarchy-capture-scr
 o.bind("SUPER + ALT + A", "Switch audio output", "omarchy-audio-output-switch")
 
 -- Overwrite existing bindings with hl.unbind() first if needed.
-hl.unbind("SUPER + SPACE")
-o.bind("SUPER + SPACE", "Background switcher", "~/.config/scripts/omarchy-background-selector")
+-- hl.unbind("SUPER + SPACE")
+-- o.bind("SUPER + SPACE", "Background switcher", "~/.config/scripts/omarchy-background-selector")
 
 -- Logitech MX Keys examples:
 -- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
