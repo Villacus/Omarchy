@@ -1,88 +1,36 @@
 {
-    "layer": "top",
-    "modules-left": [
-        "sway/workspaces",
-        "sway/mode"
-    ],
-    "modules-center": [
-        "clock"
-    ],
-    "modules-right": [
-        "network",
-        "pulseaudio",
-        "cpu",
-        "memory",
-        "disk"
-    ],
-    "sway/window": {
-        "max-length": 50
-    },
-    "battery": {
-        "format": "{capacity}% {icon}",
-        "format-icons": [
-            "",
-            "",
-            "",
-            "",
-            ""
-        ]
-    },
-    "clock": {
-        "format-alt": "{:%a, %d. %b  %H:%M}"
-    },
-    "network": {
-        "interface": "wlp2s0",
-        "format": "{ifname}",
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ipaddr}/{cidr} 󰊗",
-        "format-disconnected": "", //An empty format will hide the module.
-        "tooltip-format": "{ifname} via {gwaddr} 󰊗",
-        "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
-        "tooltip-format-ethernet": "{ifname} ",
-        "tooltip-format-disconnected": "Disconnected",
-        "max-length": 50
-    },
-    "pulseaudio": {
-        "format": "{volume}% {icon}",
-        "format-bluetooth": "{volume}% {icon}",
-        "format-muted": "",
-        "format-icons": {
-            "headphone": "",
-            "headset": "",
-            "default": [
-                "",
-                ""
-            ]
-        },
-        "scroll-step": 5,
-        "on-click": "pavucontrol",
-        "ignored-sinks": [
-            "Easy Effects Sink"
-        ]
-    },
-    "cpu": {
-        "interval": 5,
-        "format": "󰍛 {usage}%",
-        "states": {
-            "warning": 60,
-            "critical": 85
-        },
-        "on-click": "omarchy-launch-or-focus-tui btop",
-    },
-    "memory": {
-        "interval": 5,
-        "format": " {percentage}%",
-        "tooltip-format": "Usado: {used:0.1f}GiB / {total:0.1f}GiB",
-        "states": {
-            "warning": 70,
-            "critical": 90
-        },
-        "on-click": "omarchy-launch-or-focus-tui btop"
-    },
-    "disk": {
-        "interval": 30,
-        "format": "󰋊 {percentage_used}%",
-        "tooltip-format": "Libre: {free} / Total: {total}",
-        "on-click": "omarchy-launch-or-focus-tui btop"
-    }
+  "layer": "top",
+  "height": 42,
+  "spacing": 6,
+  "include": [
+    "./modules/groups.jsonc",
+    "./modules/distro.jsonc",
+    "./modules/storage.jsonc",
+    "./modules/system.jsonc",
+    "./modules/power-profiles-daemon.jsonc",
+    "./modules/workspace.jsonc",
+    "./modules/idle-ihibitor.jsonc",
+    "./modules/audio.jsonc",
+    "./modules/connections.jsonc",
+    "./modules/battery.jsonc",
+    "./modules/clock.jsonc",
+    "./modules/tray-notif.jsonc"
+  ],
+  "modules-left": [
+    "group/distro-group",
+    "group/storage",
+    "group/system"
+  ],
+  "modules-center": [
+    "power-profiles-daemon",
+    "hyprland/workspaces",
+    "idle_inhibitor"
+  ],
+  "modules-right": [
+    "group/audio",
+    "group/connections",
+    "battery",
+    "clock",
+    "group/tray-group"
+  ]
 }
