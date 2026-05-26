@@ -1,0 +1,19 @@
+#!/bin/bash
+
+WALLPAPER_ID="$1"
+MONITOR="$2"
+LOG_FILE="$HOME/.config/omarchy/current/we-debug.log"
+
+echo "[$(date)] Recibido: '$WALLPAPER_ID' Monitor: '$MONITOR'" >> "$LOG_FILE"
+
+if [[ -z "$WALLPAPER_ID" ]]; then
+  echo "[$(date)] ERROR: No se recibió ID" >> "$LOG_FILE"
+  exit 1
+fi
+
+echo "[$(date)] Ejecutando wallpaper: $WALLPAPER_ID en monitor: $MONITOR" >> "$LOG_FILE"
+
+# Ejecutar con PATH completo
+/home/villacus/.config/scripts/omarchy-wallpaper-engine "$WALLPAPER_ID" "$MONITOR" >> "$LOG_FILE" 2>&1
+
+echo "[$(date)] Ejecutado" >> "$LOG_FILE"

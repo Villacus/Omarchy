@@ -1,0 +1,74 @@
+#!/bin/bash
+
+WALLPAPER_PATH="/mnt/Games/SteamLibrary/steamapps/workshop/content/431960"
+ASSETS_DIR="/mnt/Games/SteamLibrary/steamapps/common/wallpaper_engine/assets"
+PID_DIR="$HOME/.config/omarchy/current/wallpaper-engine-pids"
+
+if [[ -z "$1" ]]; then
+  echo "Uso: omarchy-wallpaper-engine <ID> [MONITOR]"
+  exit 1
+fi
+
+WALLPAPER_ID="$1"
+MONITOR="$2"
+WALLPAPER_FOLDER="$WALLPAPER_PATH/$WALLPAPER_ID"
+
+if [[ ! -d "$WALLPAPER_FOLDER" ]]; then
+  echo "❌ Wallpaper no encontrado: $WALLPAPER_ID"
+  exit 1
+fi
+
+# Si no se especifica monitor, obtener el principal
+if [[ -z "$MONITOR" ]]; then
+  MONITOR=$(xrandr --query | grep " connected primary" | cut -d' ' -f1)
+  if [[ -z "$MONITOR" ]]; then
+    MONITOR=$(xrandr --query | grep " connected" | head -n1 | cut -d' ' -f1)
+  fi
+fi
+
+mkdir -p "$PID_DIR"
+PID_FILE="$PID_DIR/$MONITOR.pid"
+
+# Matar solo la instancia de este monitor
+if [[ -f "$PID_FILE" ]]; then
+  OLD_PID=$(cat "$PID_FILE")
+  if kill -0 "$OLD_PID" 2>/dev/null; then
+    kill "$OLD_PID"
+    sleep 0.5
+  fi
+  rm -f "$PID_FILE"
+fi
+
+echo "🎨 Configurando wallpaper: $WALLPAPER_ID en monitor: $MONITOR"
+
+nohup linux-wallpaperengine \
+  --assets-dir "$ASSETS_DIR" \
+  --screen-root "$MONITOR" \
+  --scaling fill \
+  -bg "$WALLPAPER_FOLDER" \
+  --silent \
+  --noautomute \
+  --no-audio-processing \
+  --disable-particles \
+  --disable-mouse \
+  --volume 15 \
+  --fps 30 \
+  > /dev/null 2>&1 &
+
+WPID=$!
+echo $WPID > "$PID_FILE"
+# Mantener también el .pid legacy por compatibilidad
+echo $WPID > "$HOME/.config/omarchy/current/wallpaper-engine.pid"
+
+# Guardar asignacion para restaurar al encender
+CONFIG_FILE="$HOME/.config/omarchy/current/wallpapers.conf"
+sed -i "/^$MONITOR:/d" "$CONFIG_FILE" 2>/dev/null
+echo "$MONITOR:wallpaper-engine:$WALLPAPER_ID" >> "$CONFIG_FILE"
+
+# Actualizar symlink del lockscreen
+PREVIEW_FILE="$HOME/.config/omarchy/backgrounds/wallpaper-engine/wallpaper_$WALLPAPER_ID.png"
+if [[ -f "$PREVIEW_FILE" ]]; then
+  ln -sf "$PREVIEW_FILE" "$HOME/.config/omarchy/current/background"
+fi
+
+echo "✓ Wallpaper en ejecución (PID: $WPID) en $MONITOR"

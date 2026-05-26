@@ -1,0 +1,39 @@
+#!/bin/bash
+
+CONFIG_FILE="$HOME/.config/omarchy/current/wallpapers.conf"
+LOG_FILE="$HOME/.config/omarchy/current/restore-wallpapers.log"
+
+echo "[$(date)] Iniciando restauracion de wallpapers" > "$LOG_FILE"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "[$(date)] No hay configuracion guardada" >> "$LOG_FILE"
+  exit 0
+fi
+
+# Esperar a que hyprland y los monitores esten listos
+sleep 2
+
+# Matar instancias anteriores de swaybg y wallpaper-engine
+pkill -x swaybg 2>/dev/null
+pkill -x linux-wallpaperengine 2>/dev/null
+rm -f "$HOME/.config/omarchy/current/wallpaper-engine.pid"
+rm -f "$HOME/.config/omarchy/current/wallpaper-engine-pids"/*.pid
+
+while IFS=: read -r monitor type value; do
+  [[ -z "$monitor" ]] && continue
+  echo "[$(date)] Restaurando $monitor: $type = $value" >> "$LOG_FILE"
+
+  if [[ "$type" == "static" ]]; then
+    if [[ -f "$value" ]]; then
+      setsid uwsm-app -- swaybg -o "$monitor" -i "$value" -m fill >/dev/null 2>&1 &
+      echo "[$(date)]   -> swaybg en $monitor" >> "$LOG_FILE"
+      ln -sf "$value" "$HOME/.config/omarchy/current/background"
+    else
+      echo "[$(date)]   -> ERROR: archivo no existe: $value" >> "$LOG_FILE"
+    fi
+  elif [[ "$type" == "wallpaper-engine" ]]; then
+    /home/villacus/.config/scripts/set-wallpaper-engine "$value" "$monitor" >> "$LOG_FILE" 2>&1
+  fi
+done < "$CONFIG_FILE"
+
+echo "[$(date)] Restauracion completa" >> "$LOG_FILE"

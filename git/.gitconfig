@@ -1,0 +1,12 @@
+[user]
+	email = oiervillanueva2@gmail.com
+	name = Villacus
+[init]
+	defaultBranch = main
+[alias]
+	tree = log --graph --decorate --all --oneline
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
