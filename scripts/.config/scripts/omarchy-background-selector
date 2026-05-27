@@ -2,6 +2,23 @@
 
 theme_name=$(cat "$HOME/.config/omarchy/current/theme.name" 2>/dev/null)
 current_background=$(readlink -f "$HOME/.config/omarchy/current/background" 2>/dev/null)
+engine_pid_dir="$HOME/.config/omarchy/current/wallpaper-engine-pids"
+
+stop_wallpaper_engine() {
+  local monitor="$1"
+  local pid_file="$engine_pid_dir/$monitor.pid"
+
+  if [[ -f "$pid_file" ]]; then
+    old_pid=$(cat "$pid_file")
+    if kill -0 "$old_pid" 2>/dev/null; then
+      kill "$old_pid"
+      sleep 0.5
+    fi
+    rm -f "$pid_file"
+  fi
+
+  rm -f "$HOME/.config/omarchy/current/wallpaper-engine.pid"
+}
 
 # Mostrar el selector de fondo
 selected=$(omarchy-menu-images \
@@ -32,9 +49,11 @@ fi
 # Aplicar fondo al monitor seleccionado
 if [[ "$selected" == *"wallpaper-engine"* ]]; then
   WALLPAPER_ID=$(basename "$selected" | sed 's/^wallpaper_//;s/\.[^.]*$//')
+  rm -f "$HOME/.config/omarchy/current/background"
   ~/.config/scripts/set-wallpaper-engine "$WALLPAPER_ID" "$selected_monitor"
   ENTRY="$selected_monitor:wallpaper-engine:$WALLPAPER_ID"
 else
+  stop_wallpaper_engine "$selected_monitor"
   omarchy-theme-bg-set "$selected" "$selected_monitor"
   ENTRY="$selected_monitor:static:$selected"
 fi
