@@ -10,7 +10,7 @@
 
 #custom-distro {
   color: @primary;
-  padding: 6px 15px 6px 10px;
+  padding: 6px 10px 6px 10px;
 }
 
 #custom-terminal {
@@ -44,7 +44,7 @@
 }
 
 #custom-discord {
-  color: #5865F2;
+  color: #5865f2;
   padding: 0px 10px;
 }
 
@@ -103,8 +103,8 @@
   padding: 6px 10px;
 }
 
-#tray>.passive,
-#tray>.active,
-#tray>.needs-attention {
+#tray > .passive,
+#tray > .active,
+#tray > .needs-attention {
   -gtk-icon-effect: none;
 }
