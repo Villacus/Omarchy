@@ -12,7 +12,7 @@
   },
   "memory": {
     "tooltip": false,
-    "interval": 15,
+    "interval": 5,
     "format": "",
     "format-alt": " <span size='11pt'> {used}GiB</span>",
     "states": {
