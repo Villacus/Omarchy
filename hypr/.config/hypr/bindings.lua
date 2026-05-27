@@ -19,7 +19,8 @@ o.bind("SUPER + SHIFT + C", "Calendar", { webapp = "https://calendar.google.com/
 o.bind("SUPER + SHIFT + E", "Email", { webapp = "https://mail.google.com/mail/u/0/" })
 o.bind("SUPER + SHIFT + Y", "YouTube", { webapp = "https://youtube.com/" })
 o.bind("SUPER + SHIFT + U", "WhatsApp", { webapp = "https://web.whatsapp.com/", focus = true })
-
+o.bind("SUPER + SHIFT + G", "Github", { webapp = "https://github.com/Villacus/" })
+o.bind("SUPER + SHIFT + P", "Homelab", { webapp = "https://homepage.tailf45616.ts.net" })
 -- Screenshot
 o.bind("SUPER + SHIFT + S", "Screenshot area to clipboard", "omarchy-capture-screenshot region copy")
 
