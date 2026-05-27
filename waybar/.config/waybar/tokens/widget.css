@@ -23,11 +23,6 @@
   padding: 0px 10px;
 }
 
-#custom-office {
-  color: #ff6f4c;
-  padding: 0px 10px;
-}
-
 #custom-obsidian {
   color: #cba6f7;
   padding: 0px 10px;
@@ -35,17 +30,22 @@
 
 #custom-files {
   color: #f9e2af;
-  padding: 0px 10px 0px 8px;
+  padding: 0px 10px;
 }
 
-#custom-spotify {
-  color: #1db954;
+#custom-cliamp {
+  color: #a656b6;
   padding: 0px 10px;
 }
 
 #custom-browser {
   color: #fab387;
-  padding: 0px 15px 0px 10px;
+  padding: 0px 10px;
+}
+
+#custom-discord {
+  color: #5865F2;
+  padding: 0px 10px;
 }
 
 #power-profiles-daemon,

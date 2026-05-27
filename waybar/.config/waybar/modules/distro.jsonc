@@ -1,11 +1,12 @@
 {
   "custom/distro": {
     "format": "",
+    "on-click": "omarchy menu",
     "tooltip": false
   },
   "custom/terminal": {
     "format": "󰆍",
-    "on-click": "kitty",
+    "on-click": "alacritty",
     "tooltip": false
   },
   "custom/code": {
@@ -18,24 +19,24 @@
     "on-click": "obsidian",
     "tooltip": false
   },
-  "custom/office": {
-    "format": "󰏆",
-    "on-click": "onlyoffice-desktopeditors",
-    "tooltip": false
-  },
   "custom/files": {
     "format": "",
-    "on-click": "thunar",
+    "on-click": "nautilus",
     "tooltip": false
   },
-  "custom/spotify": {
-    "format": "",
-    "on-click": "spotify",
+  "custom/cliamp": {
+    "format": "",
+    "on-click": "cliamp",
     "tooltip": false
   },
   "custom/browser": {
-    "format": "",
-    "on-click": "firefox",
+    "format": "",
+    "on-click": "google-chrome-stable",
+    "tooltip": false
+  },
+  "custom/discord": {
+    "format": "",
+    "on-click": "discord",
     "tooltip": false
   }
 }

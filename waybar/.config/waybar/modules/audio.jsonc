@@ -12,13 +12,15 @@
         ""
       ]
     },
-    "on-click": "pavucontrol",
+    "on-click": "omarchy audio output switch",
+    "on-click-right": "pavucontrol",
     "tooltip-format": "Output: {volume}%"
   },
   "pulseaudio#microphone": {
     "format": "{format_source}",
     "format-source": "",
-    "format-source-muted": ""
+    "format-source-muted": "",
+    "on-click": "omarchy audio input mute"
   },
   "pulseaudio/slider": {
     "min": 0,

@@ -12,8 +12,9 @@
       "custom/obsidian",
       "custom/office",
       "custom/files",
-      "custom/spotify",
-      "custom/browser"
+      "custom/cliamp",
+      "custom/browser",
+      "custom/discord"
     ]
   },
   "group/storage": {
