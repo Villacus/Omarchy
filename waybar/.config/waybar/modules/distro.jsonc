@@ -1,0 +1,42 @@
+{
+    "custom/distro": {
+        "format": "<span font='omarchy'>\ue900</span>",
+        "on-click": "omarchy menu",
+        "tooltip": false
+    },
+    "custom/terminal": {
+        "format": "󰆍",
+        "on-click": "alacritty",
+        "tooltip": false
+    },
+    "custom/code": {
+        "format": "󰨞",
+        "on-click": "code",
+        "tooltip": false
+    },
+    "custom/obsidian": {
+        "format": "󰹕",
+        "on-click": "obsidian",
+        "tooltip": false
+    },
+    "custom/files": {
+        "format": "",
+        "on-click": "nautilus",
+        "tooltip": false
+    },
+    "custom/cliamp": {
+        "format": "",
+        "on-click": "cliamp",
+        "tooltip": false
+    },
+    "custom/browser": {
+        "format": "",
+        "on-click": "google-chrome-stable",
+        "tooltip": false
+    },
+    "custom/discord": {
+        "format": "",
+        "on-click": "discord",
+        "tooltip": false
+    }
+}
