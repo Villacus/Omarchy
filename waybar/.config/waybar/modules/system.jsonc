@@ -1,9 +1,14 @@
 {
+    "custom/system": {
+        "tooltip": false,
+        "format": "󰻠",
+        "on-click": "omarchy-launch-or-focus-tui btop"
+    },
     "cpu": {
         "tooltip": false,
         "interval": 10,
-        "format": "󰻠",
-        "format-alt": "󰻠 <span size='11pt'>{usage}%</span>",
+        "format": "<span size='11pt'>{usage}%</span>",
+        "on-click": "omarchy-launch-or-focus-tui btop",
         "states": {
             "warning": 75,
             "critical": 90
@@ -12,8 +17,8 @@
     "memory": {
         "tooltip": false,
         "interval": 5,
-        "format": "",
-        "format-alt": " <span size='11pt'>{used}GiB</span>",
+        "format": " <span size='11pt'>{used}GiB</span>",
+        "on-click": "omarchy-launch-or-focus-tui btop",
         "states": {
             "warning": 75,
             "critical": 85
@@ -23,8 +28,8 @@
         "tooltip": false,
         "interval": 3600,
         "path": "/",
-        "format": "󱙋",
-        "format-alt": "󱙋 <span size='11pt'>{used}</span>",
+        "format": "󱙋 <span size='11pt'>{used}</span>",
+        "on-click": "omarchy-launch-or-focus-tui btop",
         "states": {
             "warning": 80,
             "critical": 90
@@ -35,8 +40,8 @@
         "interval": 10,
         "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 80,
-        "format": "{icon}",
-        "format-alt": "{icon} <span size='11pt'>{temperatureC}°C</span>",
+        "format": "{icon} <span size='11pt'>{temperatureC}°C</span>",
+        "on-click": "omarchy-launch-or-focus-tui btop",
         "format-critical": "<span size='12pt'>󱗗 </span><span size='11pt'>{temperatureC}°C</span>",
         "format-icons": [
             "",

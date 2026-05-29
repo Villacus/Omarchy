@@ -49,7 +49,12 @@
     },
     "group/system": {
         "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
         "modules": [
+            "custom/system",
             "cpu",
             "memory",
             "disk",
