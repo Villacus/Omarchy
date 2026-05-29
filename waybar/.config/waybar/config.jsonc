@@ -10,6 +10,7 @@
     "./modules/system.jsonc",
     "./modules/power-profiles.jsonc",
     "./modules/workspaces.jsonc",
+    "./modules/music.jsonc",
     "./modules/audio.jsonc",
     "./modules/connections.jsonc",
     "./modules/clock.jsonc",
@@ -19,8 +20,9 @@
     "group/distro-group"
   ],
   "modules-center": [
-    "power-profiles",
-    "hyprland/workspaces"
+    "power-profiles-daemon",
+    "hyprland/workspaces",
+    "mpris"
   ],
   "modules-right": [
     "group/tray-group",

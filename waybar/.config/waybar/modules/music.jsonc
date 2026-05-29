@@ -1,0 +1,18 @@
+{
+    "mpris": {
+        "format": "󰒮 󰏤 󰒭",
+        "format-paused": "󰒮 󰐊 󰒭",
+        "player-icons": {
+            "default": "",
+            "spotify": "",
+            "firefox": "",
+            "chromium": "",
+            "vlc": "🎬",
+            "mpv": "🎬"
+        },
+        "on-click": "playerctl play-pause",
+        "on-click-middle": "playerctl next",
+        "on-click-right": "playerctl previous",
+        "tooltip-format": "{title} - {artist}"
+    }
+}
