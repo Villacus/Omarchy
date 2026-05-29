@@ -23,7 +23,7 @@
         "on-scroll-down": "nmcli radio wifi off"
     },
     "bluetooth": {
-        "format": "󰂯",
+        "format": "",
         "format-connected": "󰂱",
         "format-disabled": "󰂲",
         "tooltip-format": "{controller_alias} {status}",
