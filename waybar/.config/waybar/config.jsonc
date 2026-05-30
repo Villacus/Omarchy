@@ -17,7 +17,8 @@
     "./modules/clock.jsonc",
     "./modules/tray.jsonc",
     "./modules/privacy.jsonc",
-    "./modules/gamemode.jsonc"
+    "./modules/gamemode.jsonc",
+    "./modules/update.jsonc"
   ],
   "modules-left": [
     "group/distro-group"
@@ -26,7 +27,8 @@
     "power-profiles-daemon",
     "hyprland/workspaces",
     "mpris",
-    "gamemode"
+    "gamemode",
+    "update"
   ],
   "modules-right": [
     "privacy",
