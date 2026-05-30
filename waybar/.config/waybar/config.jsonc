@@ -1,5 +1,5 @@
 {
-  "monitor": "DP-2",
+  "output": "DP-2",
   "reload_style_on_change": true,
   "layer": "top",
   "spacing": 0,
