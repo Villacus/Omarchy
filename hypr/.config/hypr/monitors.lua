@@ -25,6 +25,12 @@ hl.monitor({ output = "DP-3", mode = "1600x900@60", position = "0x180", scale = 
 -- ASUS VG249Q3R (DP-2) - RIGHT
 hl.monitor({ output = "DP-2", mode = "1920x1080@180", position = "1600x0", scale = omarchy_monitor_scale })
 
+hl.workspace_rule({ workspace = "1", monitor = "DP-2", persistent = true })
+hl.workspace_rule({ workspace = "2", monitor = "DP-3", persistent = true })
+hl.workspace_rule({ workspace = "3", monitor = "DP-2", persistent = true })
+hl.workspace_rule({ workspace = "4", monitor = "DP-3", persistent = true })
+hl.workspace_rule({ workspace = "5", monitor = "DP-2", persistent = true })
+
 -- Portrait/rotated secondary monitor (transform: 1 = 90°, 3 = 270°)
 -- hl.monitor({ output = "DP-2", mode = "preferred", position = "auto", scale = 1, transform = 1 })
 

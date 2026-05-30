@@ -3,7 +3,11 @@
         "format": "{icon} {windows}",
         "on-click": "activate",
         "persistent-workspaces": {
-            "*": 5
+            "1": ["DP-2"],
+            "2": ["DP-3"],
+            "3": ["DP-2"],
+            "4": ["DP-3"],
+            "5": ["DP-2"]
         },
         "window-rewrite-default": "󰊠",
         "window-rewrite": {
