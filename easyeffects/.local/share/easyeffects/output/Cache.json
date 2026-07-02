@@ -3,7 +3,7 @@
         "blocklist": [],
         "equalizer#0": {
             "balance": 0.0,
-            "bypass": true,
+            "bypass": false,
             "input-gain": 0.0,
             "left": {
                 "band0": {

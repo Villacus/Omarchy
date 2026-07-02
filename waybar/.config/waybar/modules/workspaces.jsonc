@@ -26,6 +26,10 @@
             "org.qbittorrent.qBittorrent": "󰘿",
             "steam": "",
             "class<steam_app_.*>": "",
+            // --- Minecraft ---
+            "Minecraft": "󰍳",
+            "minecraft": "󰍳",
+            "org.prismlauncher.PrismLauncher": "󰍳",
             "WhatsApp": "",
             "Github": "",
             "youtube": "",

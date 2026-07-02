@@ -15,9 +15,9 @@
         }
     },
     "memory": {
-        "tooltip": false,
         "interval": 5,
         "format": " <span size='11pt'>{used}GiB</span>",
+        "format-tooltip": "{used}/{total}",
         "on-click": "omarchy-launch-or-focus-tui btop",
         "states": {
             "warning": 75,
@@ -25,10 +25,10 @@
         }
     },
     "disk": {
-        "tooltip": false,
-        "interval": 3600,
+        "interval": 5,
         "path": "/",
         "format": "󱙋 <span size='11pt'>{used}</span>",
+        "tooltip-format": "{used}/{total}",
         "on-click": "omarchy-launch-or-focus-tui btop",
         "states": {
             "warning": 80,
