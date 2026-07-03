@@ -11,7 +11,6 @@ Configuración personal de escritorio Linux con **Omarchy** sobre **Hyprland** (
 | `hypr/` | Configuración de Hyprland en Lua (monitores, bindings, input, looknfeel, autostart, hyprlock, hypridle, hyprsunset) |
 | `waybar/` | Barra de estado modular con tema Material You (13 módulos, 6 archivos CSS de tokens) |
 | `scripts/` | Scripts personalizados: gestor de wallpapers, control de música (CLIAMP/MPRIS), wallpaper-engine |
-| `easyeffects/` | Pipeline de audio profesional: presets de entrada (filtro de voz con RNNoise + DeepFilterNet) y salida (EQs, convolución con IRS) |
 | `omarchy-extensions/` | Extensión del menú de Omarchy para selector de wallpapers multi-monitor |
 | `opencode/` | Configuración de OpenCode AI (`AGENTS.md` con documentación del sistema) |
 
@@ -19,8 +18,7 @@ Configuración personal de escritorio Linux con **Omarchy** sobre **Hyprland** (
 
 - **Monitor izquierdo**: Philips 200V4 — DP-3, 1600x900@60
 - **Monitor derecho**: ASUS VG249Q3R — DP-2, 1920x1080@180
-- **Auriculares**: G435 (entrada/salida)
-- **Micrófono**: FIFINE (con cadena de reducción de ruido)
+- **Auriculares**: G435
 
 ## Atajos destacados
 
