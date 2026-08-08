@@ -24,10 +24,3 @@ require("default.hypr.toggles")
 -- o.window("qemu", { workspace = "5" })
 o.window({ title = "Steam", class = "steam" }, { tile = true })
 o.window({ title = "steam" }, { float = true })
-o.window({ class = "chrome-navidrome.tailf45616.ts.net__-Default" }, {
-  float = true,
-  size = "292 513",
-  move = "1301 183",
-  pin = true,
-})
-
