@@ -1,8 +1,0 @@
-{
-    "gamemode": {
-        "format": "  {count}",
-        "format-alt": "  {glyph}",
-        "glyph": "",
-        "hide-empty": true
-    }
-}
