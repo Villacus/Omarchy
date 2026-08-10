@@ -32,9 +32,108 @@ hl.config({
 	},
 })
 
--- Enable workspace switching animation (disabled by default in omarchy).
+-- Animations imported from the Amekoji theme.
 -- https://wiki.hypr.land/Configuring/Advanced-and-Cool/Animations/
-hl.animation({ leaf = "workspaces", enabled = true, speed = 5, bezier = "easeOutQuint", style = "slide" })
+hl.curve("easeSoft", { type = "bezier", points = { { 0.22, 0.61 }, { 0.36, 1 } } })
+hl.curve("easePop", { type = "bezier", points = { { 0.26, 0.70 }, { 0.48, 1 } } })
+hl.curve("easeFade", { type = "bezier", points = { { 0.33, 0.00 }, { 0.20, 1 } } })
+
+hl.animation({
+	leaf = "windows",
+	enabled = true,
+	speed = 3.0,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "windowsIn",
+	enabled = true,
+	speed = 2.8,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "windowsOut",
+	enabled = true,
+	speed = 2.6,
+	bezier = "easeFade",
+})
+hl.animation({
+	leaf = "windowsMove",
+	enabled = true,
+	speed = 3.2,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "fade",
+	enabled = true,
+	speed = 2.4,
+	bezier = "easeFade",
+})
+hl.animation({
+	leaf = "fadeIn",
+	enabled = true,
+	speed = 2.2,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "fadeOut",
+	enabled = true,
+	speed = 2.0,
+	bezier = "easeFade",
+})
+hl.animation({
+	leaf = "fadeDim",
+	enabled = true,
+	speed = 2.0,
+	bezier = "easeFade",
+})
+hl.animation({
+	leaf = "layers",
+	enabled = true,
+	speed = 2.4,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "layersIn",
+	enabled = true,
+	speed = 2.2,
+	bezier = "easePop",
+})
+hl.animation({
+	leaf = "layersOut",
+	enabled = true,
+	speed = 2.0,
+	bezier = "easeFade",
+})
+hl.animation({
+	leaf = "workspaces",
+	enabled = true,
+	speed = 2.6,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "specialWorkspace",
+	enabled = true,
+	speed = 2.4,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "border",
+	enabled = true,
+	speed = 3.4,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "borderangle",
+	enabled = true,
+	speed = 3.8,
+	bezier = "easeSoft",
+})
+hl.animation({
+	leaf = "fadeSwitch",
+	enabled = true,
+	speed = 1.8,
+	bezier = "easeFade",
+})
 
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#layout
 -- hl.config({
