@@ -55,11 +55,18 @@ window#waybar.empty #window {
   opacity: 0.5;
 }
 
+#workspaces button:hover {
+  background-color: alpha(@foreground, 0.15);
+  border-radius: 16px;
+  transition: all 0.2s ease-in-out;
+}
+
 #cpu,
+#memory,
+#disk,
 #battery,
 #pulseaudio,
 #custom-power,
-#custom-screenrecording-indicator,
 #custom-update {
   min-width: 12px;
   margin: 0 7.5px;
@@ -106,16 +113,6 @@ tooltip label {
 
 .hidden {
   opacity: 0;
-}
-
-#custom-screenrecording-indicator {
-  min-width: 12px;
-  margin-left: 8.75px;
-  font-size: 10px;
-}
-
-#custom-screenrecording-indicator.active {
-  color: #f13333;
 }
 
 #custom-lock,
