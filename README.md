@@ -2,23 +2,49 @@
 
 Configuración personal de escritorio Linux con **Omarchy** sobre **Hyprland** (Wayland) en **CachyOS** (Arch Linux).
 
+## Instalación rápida
+
+```bash
+# Clonar el repositorio
+git clone <tu-repo-url> ~/dotfiles
+cd ~/dotfiles
+
+# Instalar con stow (crea backups automáticos)
+./install.sh
+
+# Para desinstalar
+./uninstall.sh
+```
+
+**Requisitos previos:**
+- GNU Stow: `sudo pacman -S stow`
+- Omarchy instalado (o ajusta las rutas en los scripts)
+
 ## Estructura
 
 | Directorio | Contenido |
 |---|---|
 | `bash/` | `.bashrc` — alias, PATH, fastfetch |
 | `git/` | `.gitconfig` — user, alias `tree`, LFS |
+| `ssh/` | Claves SSH (`.gitignore` excluye `known_hosts`) |
 | `hypr/` | Configuración de Hyprland en Lua (monitores, bindings, input, looknfeel, autostart, hyprlock, hypridle, hyprsunset) |
-| `waybar/` | Barra de estado modular con tema Material You (13 módulos, 6 archivos CSS de tokens) |
+| `waybar/` | Barra de estado modular con tema Material You (13 módulos) |
 | `scripts/` | Scripts personalizados: gestor de wallpapers, control de música (CLIAMP/MPRIS), wallpaper-engine |
 | `omarchy-extensions/` | Extensión del menú de Omarchy para selector de wallpapers multi-monitor |
 | `opencode/` | Configuración de OpenCode AI (`AGENTS.md` con documentación del sistema) |
+| `alacritty/` | Emulador de terminal |
+| `btop/` | Monitor de sistema |
+| `fastfetch/` | System info |
+| `starship/` | Prompt personalizado |
+| `mimeapps/` | Aplicaciones por defecto |
 
 ## Hardware
 
 - **Monitor izquierdo**: Philips 200V4 — DP-3, 1600x900@60
 - **Monitor derecho**: ASUS VG249Q3R — DP-2, 1920x1080@180
 - **Auriculares**: G435
+
+⚠️ **Nota para portátiles:** Edita `hypr/.config/hypr/monitors.lua` para adaptar los nombres de monitores a tu hardware.
 
 ## Atajos destacados
 

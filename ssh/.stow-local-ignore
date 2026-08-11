@@ -1,0 +1,3 @@
+# SSH: ignorar archivos específicos de cada máquina
+known_hosts.*
+agent/

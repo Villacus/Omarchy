@@ -1,0 +1,9 @@
+# Archivos que stow debe ignorar en TODOS los paquetes
+\.git
+\.gitignore
+^/README\.md
+^/CLAUDE\.md
+^/AUDIT\.md
+.*\.bak$
+.*\.bak\.[0-9]+$
+\.luarc\.json$
