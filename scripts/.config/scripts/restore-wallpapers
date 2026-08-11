@@ -24,20 +24,45 @@ pkill -x linux-wallpaper 2>/dev/null
 rm -f "$HOME/.config/omarchy/current/wallpaper-engine.pid"
 rm -f "$HOME/.config/omarchy/current/wallpaper-engine-pids"/*.pid
 
+# Fondo por defecto del tema actual como fallback
+THEME_BG_DIR="$HOME/.config/omarchy/current/theme/backgrounds"
+DEFAULT_BG=$(find -L "$THEME_BG_DIR" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.gif' -o -iname '*.bmp' -o -iname '*.webp' \) 2>/dev/null | sort | head -n1)
+
+apply_static() {
+  local monitor="$1" path="$2"
+  if [[ -f "$path" ]]; then
+    setsid uwsm-app -- swaybg -o "$monitor" -i "$path" -m fill >/dev/null 2>&1 &
+    ln -sf "$path" "$HOME/.config/omarchy/current/background"
+    return 0
+  fi
+  return 1
+}
+
 while IFS=: read -r monitor type value; do
   [[ -z "$monitor" ]] && continue
-  echo "[$(date)] Restaurando $monitor: $type = $value" >> "$LOG_FILE"
 
   if [[ "$type" == "static" ]]; then
-    if [[ -f "$value" ]]; then
-      setsid uwsm-app -- swaybg -o "$monitor" -i "$value" -m fill >/dev/null 2>&1 &
+    if apply_static "$monitor" "$value"; then
+      echo "[$(date)] Restaurando $monitor: static = $value" >> "$LOG_FILE"
       echo "[$(date)]   -> swaybg en $monitor" >> "$LOG_FILE"
-      ln -sf "$value" "$HOME/.config/omarchy/current/background"
+    elif [[ -n "$DEFAULT_BG" ]]; then
+      echo "[$(date)] $monitor: no existe '$value', usando fondo del tema" >> "$LOG_FILE"
+      apply_static "$monitor" "$DEFAULT_BG"
+      echo "[$(date)]   -> fallback swaybg en $monitor" >> "$LOG_FILE"
     else
       echo "[$(date)]   -> ERROR: archivo no existe: $value" >> "$LOG_FILE"
     fi
   elif [[ "$type" == "wallpaper-engine" ]]; then
-    /home/villacus/.config/scripts/set-wallpaper-engine "$value" "$monitor" >> "$LOG_FILE" 2>&1
+    if [[ -d "/mnt/Games/SteamLibrary/steamapps/workshop/content/431960/$value" ]]; then
+      echo "[$(date)] Restaurando $monitor: wallpaper-engine = $value" >> "$LOG_FILE"
+      /home/villacus/.config/scripts/set-wallpaper-engine "$value" "$monitor" >> "$LOG_FILE" 2>&1
+    elif [[ -n "$DEFAULT_BG" ]]; then
+      echo "[$(date)] $monitor: WE $value no disponible (steam sin montar), usando fondo del tema" >> "$LOG_FILE"
+      apply_static "$monitor" "$DEFAULT_BG"
+      echo "[$(date)]   -> fallback swaybg en $monitor" >> "$LOG_FILE"
+    else
+      echo "[$(date)]   -> ERROR: WE $value no disponible" >> "$LOG_FILE"
+    fi
   fi
 done < "$CONFIG_FILE"
 
