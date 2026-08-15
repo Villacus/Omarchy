@@ -46,6 +46,59 @@ backup_config() {
     return 1
 }
 
+validate_link() {
+    local target="$1"
+    local source="$2"
+    local target_path
+    local source_path
+
+    if [[ ! -L "$target" ]]; then
+        echo -e "${RED}Error: $target no es un symlink${NC}"
+        return 1
+    fi
+
+    if ! target_path="$(readlink -f -- "$target")"; then
+        echo -e "${RED}Error: $target es un symlink roto${NC}"
+        return 1
+    fi
+
+    if ! source_path="$(readlink -f -- "$source")"; then
+        echo -e "${RED}Error: no se puede resolver el origen esperado $source${NC}"
+        return 1
+    fi
+
+    if [[ "$target_path" != "$source_path" ]]; then
+        echo -e "${RED}Error: $target apunta a $target_path, se esperaba $source_path${NC}"
+        return 1
+    fi
+}
+
+EDITOR_COMMAND=()
+
+select_editor() {
+    local configured_editor
+    local fallback_editor
+
+    for configured_editor in "$VISUAL" "$EDITOR"; do
+        if [[ -n "$configured_editor" ]]; then
+            read -r -a EDITOR_COMMAND <<< "$configured_editor"
+            if command -v "${EDITOR_COMMAND[0]}" &> /dev/null; then
+                return 0
+            fi
+        fi
+    done
+
+    for fallback_editor in nvim vim nano; do
+        if command -v "$fallback_editor" &> /dev/null; then
+            EDITOR_COMMAND=("$fallback_editor")
+            return 0
+        fi
+    done
+
+    echo -e "${RED}Error: no se encontró un editor. Configura VISUAL o EDITOR.${NC}"
+    return 1
+}
+
 # Paquetes a instalar con stow
 PACKAGES=(
     "bash"
@@ -113,23 +166,60 @@ mkdir -p "$HOME/.config/omarchy"
 
 echo -e "\n${GREEN}Instalando paquetes con stow...${NC}"
 
-cd "$HOME"
-
 # Instalar cada paquete
 for package in "${PACKAGES[@]}"; do
-    if [[ -d "$DOTFILES_DIR/$package" ]]; then
-        echo -e "  ${GREEN}✓${NC} Instalando $package"
-        stow -d dotfiles -t "$HOME" "$package" 2>&1 | grep -v "^BUG in find_stowed_path" || true
-    else
-        echo -e "  ${YELLOW}⚠${NC} Paquete no encontrado: $package"
+    if [[ ! -d "$DOTFILES_DIR/$package" ]]; then
+        echo -e "${RED}Error: Paquete no encontrado: $package${NC}"
+        exit 1
     fi
+
+    echo -e "  ${GREEN}✓${NC} Instalando $package"
+    stow -d "$DOTFILES_DIR" -t "$HOME" "$package"
 done
 
+echo -e "\n${GREEN}Validando symlinks de stow...${NC}"
+VALIDATION_LINKS=(
+    "$HOME/.bashrc:$DOTFILES_DIR/bash/.bashrc"
+    "$HOME/.gitconfig:$DOTFILES_DIR/git/.gitconfig"
+    "$HOME/.opencode:$DOTFILES_DIR/opencode/.opencode"
+    "$HOME/.config/hypr:$DOTFILES_DIR/hypr/.config/hypr"
+    "$HOME/.config/waybar:$DOTFILES_DIR/waybar/.config/waybar"
+    "$HOME/.config/scripts:$DOTFILES_DIR/scripts/.config/scripts"
+    "$HOME/.config/omarchy/extensions:$DOTFILES_DIR/omarchy-extensions/.config/omarchy/extensions"
+    "$HOME/.config/alacritty:$DOTFILES_DIR/alacritty/.config/alacritty"
+    "$HOME/.config/btop:$DOTFILES_DIR/btop/.config/btop"
+    "$HOME/.config/fastfetch:$DOTFILES_DIR/fastfetch/.config/fastfetch"
+    "$HOME/.config/starship.toml:$DOTFILES_DIR/starship/.config/starship.toml"
+    "$HOME/.config/mimeapps.list:$DOTFILES_DIR/mimeapps/.config/mimeapps.list"
+)
+
+for link in "${VALIDATION_LINKS[@]}"; do
+    target="${link%%:*}"
+    source="${link#*:}"
+    validate_link "$target" "$source"
+done
+
+if [[ -f "$DOTFILES_DIR/ssh/.ssh/id_ed25519.pub" ]]; then
+    validate_link "$HOME/.ssh/id_ed25519.pub" "$DOTFILES_DIR/ssh/.ssh/id_ed25519.pub"
+fi
+
+# Eliminar solo el symlink roto que dejó una versión previa del paquete SSH.
+if [[ -L "$HOME/.ssh/agent" ]] && [[ ! -e "$HOME/.ssh/agent" ]]; then
+    echo -e "${YELLOW}  Eliminando symlink roto: ~/.ssh/agent${NC}"
+    rm "$HOME/.ssh/agent"
+fi
+
+echo -e "${YELLOW}\nRevisa los monitores disponibles con: hyprctl monitors${NC}"
+select_editor
+"${EDITOR_COMMAND[@]}" \
+    "$DOTFILES_DIR/hypr/.config/hypr/monitors.lua" \
+    "$DOTFILES_DIR/waybar/.config/waybar/config.jsonc"
+
 echo -e "\n${GREEN}=== Instalación completada ===${NC}"
-echo -e "\nSymlinks creados en:"
+echo -e "\nSymlinks creados y validados en:"
 echo "  - ~/.bashrc"
 echo "  - ~/.gitconfig"
-echo "  - ~/.ssh/ (keys, no known_hosts)"
+echo "  - ~/.ssh/id_ed25519.pub (si existe en el paquete)"
 echo "  - ~/.config/hypr/"
 echo "  - ~/.config/waybar/"
 echo "  - ~/.config/scripts/"
@@ -141,10 +231,11 @@ echo "  - ~/.config/starship.toml"
 echo "  - ~/.config/mimeapps.list"
 
 echo -e "\n${YELLOW}Nota importante para portátil:${NC}"
-echo "  - Revisa hypr/.config/hypr/monitors.lua y adapta a tu hardware"
+echo "  - Ajusta monitores.lua y el output de Waybar en el editor que se abrió"
 echo "  - Los paths de Wallpaper Engine están hardcoded para /mnt/Games/"
 echo "  - Si no tienes Omarchy instalado, necesitarás instalarlo primero"
+echo "  - La clave SSH privada se gestiona manualmente y no la toca este script"
 
 echo -e "\n${GREEN}Para desinstalar:${NC}"
-echo "  cd ~ && stow -D -d dotfiles <paquete>"
+echo "  stow -D -d $DOTFILES_DIR -t \$HOME <paquete>"
 echo "  o ejecuta: ./uninstall.sh"

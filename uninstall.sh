@@ -49,10 +49,13 @@ cd "$HOME"
 
 # Desinstalar cada paquete
 for package in "${PACKAGES[@]}"; do
-    if [[ -d "$DOTFILES_DIR/$package" ]]; then
-        echo -e "  ${GREEN}✓${NC} Desinstalando $package"
-        stow -D -d dotfiles -t "$HOME" "$package" 2>&1 | grep -v "^BUG in find_stowed_path" || true
+    if [[ ! -d "$DOTFILES_DIR/$package" ]]; then
+        echo -e "${RED}Error: Paquete no encontrado: $package${NC}"
+        exit 1
     fi
+
+    echo -e "  ${GREEN}✓${NC} Desinstalando $package"
+    stow -D -d "$DOTFILES_DIR" -t "$HOME" "$package"
 done
 
 echo -e "\n${GREEN}=== Desinstalación completada ===${NC}"

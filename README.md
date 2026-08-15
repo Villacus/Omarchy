@@ -9,7 +9,8 @@ Configuración personal de escritorio Linux con **Omarchy** sobre **Hyprland** (
 git clone <tu-repo-url> ~/dotfiles
 cd ~/dotfiles
 
-# Instalar con stow (crea backups automáticos)
+# Instalar con stow (crea backups automáticos y valida los symlinks)
+# Al terminar el despliegue abre el editor para adaptar monitores y Waybar.
 ./install.sh
 
 # Para desinstalar
@@ -26,14 +27,14 @@ cd ~/dotfiles
 |---|---|
 | `bash/` | `.bashrc` — alias, PATH, fastfetch |
 | `git/` | `.gitconfig` — user, alias `tree`, LFS |
-| `ssh/` | Claves SSH (`.gitignore` excluye `known_hosts`) |
+| `ssh/` | Clave pública SSH; la clave privada se gestiona manualmente |
 | `hypr/` | Configuración de Hyprland en Lua (monitores, bindings, input, looknfeel, autostart, hyprlock, hypridle, hyprsunset) |
 | `waybar/` | Barra de estado modular con tema Material You (13 módulos) |
 | `scripts/` | Scripts personalizados: gestor de wallpapers, control de música (CLIAMP/MPRIS), wallpaper-engine |
 | `omarchy-extensions/` | Extensión del menú de Omarchy para selector de wallpapers multi-monitor |
 | `opencode/` | Configuración de OpenCode AI (`AGENTS.md` con documentación del sistema) |
 | `alacritty/` | Emulador de terminal |
-| `btop/` | Monitor de sistema |
+| `btop/` | Monitor de sistema con el tema integrado `Default` |
 | `fastfetch/` | System info |
 | `starship/` | Prompt personalizado |
 | `mimeapps/` | Aplicaciones por defecto |
@@ -44,7 +45,7 @@ cd ~/dotfiles
 - **Monitor derecho**: ASUS VG249Q3R — DP-2, 1920x1080@180
 - **Auriculares**: G435
 
-⚠️ **Nota para portátiles:** Edita `hypr/.config/hypr/monitors.lua` para adaptar los nombres de monitores a tu hardware.
+⚠️ **Nota para portátiles:** Tras desplegar los enlaces, el instalador abre `hypr/.config/hypr/monitors.lua` y `waybar/.config/waybar/config.jsonc` para adaptar las salidas. Usa `hyprctl monitors` para obtener los nombres del equipo nuevo.
 
 ## Atajos destacados
 
