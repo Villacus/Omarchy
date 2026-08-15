@@ -16,16 +16,19 @@ cd ~/dotfiles
 El script:
 - ✓ Crea backups automáticos de configs existentes
 - ✓ Usa symlinks (cambios en el repo = cambios en sistema)
+- ✓ Valida los destinos de Stow al terminar
+- ✓ Abre el editor para adaptar monitores y la salida de Waybar
 - ✓ Pregunta confirmación antes de sobrescribir
 
 ## ⚙️ Configuración específica de portátil
 
 ### 1. Monitores (CRÍTICO)
-```bash
-# Editar según tu hardware
-nvim ~/dotfiles/hypr/.config/hypr/monitors.lua
+El instalador abre estas configuraciones después de desplegar y validar los symlinks:
+- `hypr/.config/hypr/monitors.lua`
+- `waybar/.config/waybar/config.jsonc`
 
-# Ver monitores disponibles:
+Antes o durante esa edición, consulta las salidas disponibles:
+```bash
 hyprctl monitors
 ```
 
@@ -38,12 +41,8 @@ Si no tienes Steam/Wallpaper Engine, comenta estas líneas en:
 - `/mnt/Games/SteamLibrary/` en scripts de wallpaper-engine
 - Ajusta según tu instalación de Steam
 
-### 4. SSH Keys
-Las claves SSH se symlinkarán desde el repo. Si ya tienes keys:
-```bash
-# Copiar keys existentes AL repo antes de instalar
-cp ~/.ssh/id_ed25519* ~/dotfiles/ssh/.ssh/
-```
+### 4. Claves SSH
+El instalador solo puede desplegar la clave pública incluida en el paquete. La clave privada se gestiona manualmente fuera del repositorio: no se copia, genera ni modifica durante la instalación.
 
 ## 🧪 Verificación post-instalación
 
@@ -92,7 +91,7 @@ cd ~/dotfiles
 - ✓ Btop (system monitor)
 - ✓ Mimeapps (default apps)
 - ✓ Scripts personalizados
-- ✓ SSH keys
+- ✓ Clave pública SSH
 - ✓ OpenCode config
 
 ## ⚠️ Problemas comunes
@@ -108,8 +107,9 @@ cd ~/dotfiles
 ### Waybar no aparece
 - Verifica en `waybar/config.jsonc` el `output` (debe ser tu monitor principal)
 
-### Permisos SSH
+### Permisos de clave pública SSH
 ```bash
-chmod 600 ~/.ssh/id_ed25519
 chmod 644 ~/.ssh/id_ed25519.pub
 ```
+
+La clave privada se gestiona manualmente fuera de este repositorio.
