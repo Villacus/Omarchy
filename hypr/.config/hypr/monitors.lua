@@ -21,3 +21,6 @@ hl.workspace_rule({ workspace = "5", monitor = "DP-2", persistent = true })
 
 -- Portrait/rotated secondary monitor (transform: 1 = 90°, 3 = 270°).
 -- hl.monitor({ output = "DP-2", mode = "preferred", position = "auto", scale = 1, transform = 1 })
+o.window("discord", { workspace = 2 })
+o.window("chrome-navidrome.tailf45616.ts.net__-Default", { workspace = "special:scratchpad" })
+o.window("chrome-web.whatsapp.com__-Default", { workspace = "special:scratchpad" })
