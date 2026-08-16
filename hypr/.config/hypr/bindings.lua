@@ -16,10 +16,13 @@ hl.unbind("SUPER + SHIFT + S") -- Default: Screenshot → rebinding with specifi
 o.bind("SUPER + ALT + RETURN", "Tmux", { omarchy = "terminal-tmux" })
 o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { omarchy = "nautilus-cwd" })
 o.bind("SUPER + SHIFT + N", "Editor", { omarchy = "editor" })
-o.bind("SUPER + SHIFT + D", "Docker", { tui = "lazydocker" })
-o.bind("SUPER + SHIFT + V", "VSCode", { launch = "code", focus = "^code$" })
-o.bind("SUPER + SHIFT + H", "Steam", { launch = "steam", focus = "^steam$" })
-o.bind("SUPER + SHIFT + I", "Discord", { launch = "discord", focus = "^discord$" })
+
+-- Optional desktop applications are not installed on this laptop. Keep their
+-- bindings disabled until the corresponding applications are available.
+--o.bind("SUPER + SHIFT + D", "Docker", { tui = "lazydocker" })
+--o.bind("SUPER + SHIFT + V", "VSCode", { launch = "code", focus = "^code$" })
+--o.bind("SUPER + SHIFT + H", "Steam", { launch = "steam", focus = "^steam$" })
+--o.bind("SUPER + SHIFT + I", "Discord", { launch = "discord", focus = "^discord$" })
 
 -- Web app bindings.
 o.bind("SUPER + SHIFT + C", "Calendar", { webapp = "https://calendar.google.com/" })
