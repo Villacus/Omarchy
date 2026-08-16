@@ -39,14 +39,14 @@
 | `~/.config/hypr/looknfeel.lua` | Apariencia (gaps, bordes, env vars) |
 | `~/.config/hypr/hyprlock.conf` | Pantalla de bloqueo (input field, blur, fondo) |
 | `~/.config/hypr/hypridle.conf` | Tiempos de inactividad (screensaver, lock, apagado pantalla) |
-| `~/.config/omarchy/current/` | Tema activo actual (symlinks y configs) |
-| `~/.config/omarchy/current/wallpapers.conf` | Asignación de wallpapers por monitor para restaurar al encender |
-| `~/.config/omarchy/current/background` | Symlink al wallpaper activo (usado por hyprlock) |
+| `~/.local/state/omarchy/current/` | Estado activo de Omarchy (symlinks y configs) |
+| `~/.local/state/omarchy/current/wallpapers.conf` | Asignación de wallpapers por monitor para restaurar al encender |
+| `~/.local/state/omarchy/current/background` | Symlink al wallpaper activo (usado por hyprlock) |
 | `~/.config/omarchy/backgrounds/` | Fondos de usuario (theme-agnostic y por tema) |
 | `~/.config/omarchy/extensions/menu.sh` | Sourced por omarchy-menu, permite override de funciones |
 | `~/.local/state/omarchy/toggles/hyprlock.conf` | Toggles dinámicos de omarchy para hyprlock (CREA input-field duplicado) |
 | `~/.config/scripts/` | Scripts personalizados del usuario |
-| `~/.config/waybar/` | Barra de estado |
+| `~/.config/omarchy/shell.json` | Configuración de la barra Quickshell de Omarchy |
 | `~/.config/walker/` | Lanzador de aplicaciones |
 | `~/.local/share/icons/` | Iconos y cursores instalados manualmente |
 
@@ -54,7 +54,7 @@
 
 ### Gestión
 
-- **Estáticos**: `omarchy-theme-bg-set <ruta> [MONITOR]` — usa `swaybg`, guarda symlink en `~/.config/omarchy/current/background`
+- **Estáticos**: `omarchy-theme-bg-set <ruta>` — los renderiza el shell de Omarchy y guarda el symlink en `~/.local/state/omarchy/current/background`
 - **Animados (Wallpaper Engine)**: `omarchy-wallpaper-engine <ID> [MONITOR]` — usa `linux-wallpaperengine`, guarda PID por monitor
 - **Selector interactivo**: `omarchy-background-selector` — menú para elegir wallpaper y asignarlo a un monitor
 
@@ -89,7 +89,7 @@
 ### Lockscreen (hyprlock)
 
 - Config en `~/.config/hypr/hyprlock.conf` (no tocar `~/.local/share/omarchy/config/hypr/hyprlock.conf`).
-- Soursea colores del tema desde `~/.config/omarchy/current/theme/hyprlock.conf`.
+- Soursea colores del tema desde `~/.local/state/omarchy/current/theme/hyprlock.conf`.
 - **NO sourcear `~/.local/state/omarchy/toggles/hyprlock.conf`** porque crea un SEGUNDO bloque `input-field` con valores default (centro, 650x100, sin fade) que se superpone al personalizado.
 - El toggle `omarchy-style-corners-hyprlock` escribe rounding en el toggles file, pero al no sourcearlo se pierde esa funcionalidad — poner `rounding = N` directamente en hyprlock.conf.
 - `blur_passes` controla el desenfoque del fondo: 0 = sin blur, 3 = default omarchy.
@@ -120,16 +120,18 @@
 - El IPC y MPRIS convergen al mismo estado interno: cambios por IPC actualizan MPRIS Volume y viceversa.
 - `wpctl set-volume` controla el volumen del stream de PipeWire, NO el volumen interno de la app. Cambiar uno sin el otro desincroniza.
 
-### Waybar scroll en botones
-- `on-scroll-up` / `on-scroll-down` en módulos custom ejecutan scripts al scrollear.
+### Scroll en controles de la barra
+- Los controles de Quickshell y los scripts asociados deben mantener pasos de volumen uniformes.
 - Para pasos perceptualmente uniformes, usar factor multiplicativo: paso en dB = `20*log10(factor)`. Factor 1.10 → 0.83 dB/scroll.
+
+Los apuntes históricos de CLIAMP y Waybar se conservan solo como referencia; Waybar ya no es la barra activa.
 
 ### git history management
 - Para limpiar commits de prueba/error: `git reset --soft <base-commit> && git commit -m "mensaje"` aplasta todo el working tree en un solo commit.
 - Si `git rebase -i` se cuelga (SIGTERM del editor): `git rebase --abort` y usar reset --soft en su lugar.
 
-### omarchy restart waybar
-- `omarchy restart waybar`.
+### omarchy restart shell
+- `omarchy restart shell`.
 
 ## Regla final para agentes
 - **Si aprendes algo nuevo sobre el sistema del usuario** (rutas, configs, bugs, workarounds, comportamiento de programas), **documéntalo aquí inmediatamente**. No esperes a que te lo pidan. Esto asegura que el conocimiento persista entre sesiones.

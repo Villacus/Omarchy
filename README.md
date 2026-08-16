@@ -10,7 +10,7 @@ git clone <tu-repo-url> ~/dotfiles
 cd ~/dotfiles
 
 # Instalar con stow (crea backups automáticos y valida los symlinks)
-# Al terminar el despliegue abre el editor para adaptar monitores y Waybar.
+# Al terminar el despliegue abre el editor para adaptar monitores y Quickshell.
 ./install.sh
 
 # Para desinstalar
@@ -29,7 +29,7 @@ cd ~/dotfiles
 | `git/` | `.gitconfig` — user, alias `tree`, LFS |
 | `ssh/` | Clave pública SSH; la clave privada se gestiona manualmente |
 | `hypr/` | Configuración de Hyprland en Lua (monitores, bindings, input, looknfeel, autostart, hyprlock, hypridle, hyprsunset) |
-| `waybar/` | Barra de estado modular con tema Material You (13 módulos) |
+| `omarchy/` | Configuración activa de la barra Quickshell (`shell.json`) |
 | `scripts/` | Scripts personalizados: gestor de wallpapers, control de música (CLIAMP/MPRIS), wallpaper-engine |
 | `omarchy-extensions/` | Extensión del menú de Omarchy para selector de wallpapers multi-monitor |
 | `opencode/` | Configuración de OpenCode AI (`AGENTS.md` con documentación del sistema) |
@@ -45,7 +45,7 @@ cd ~/dotfiles
 - **Monitor derecho**: ASUS VG249Q3R — DP-2, 1920x1080@180
 - **Auriculares**: G435
 
-⚠️ **Nota para portátiles:** Tras desplegar los enlaces, el instalador abre `hypr/.config/hypr/monitors.lua` y `waybar/.config/waybar/config.jsonc` para adaptar las salidas. Usa `hyprctl monitors` para obtener los nombres del equipo nuevo.
+⚠️ **Nota para portátiles:** Tras desplegar los enlaces, el instalador abre `hypr/.config/hypr/monitors.lua` y `omarchy/.config/omarchy/shell.json`. Usa `hyprctl monitors` para obtener los nombres del equipo nuevo. La barra activa es Quickshell, no Waybar.
 
 ## Atajos destacados
 
@@ -62,7 +62,7 @@ cd ~/dotfiles
 
 ## Wallpapers
 
-Soporta fondos estáticos (`swaybg`) y animados (Wallpaper Engine vía `linux-wallpaperengine`) con persistencia por monitor. El selector interactivo se lanza desde el menú de Omarchy.
+Soporta fondos estáticos mediante el shell de Omarchy y animados (Wallpaper Engine vía `linux-wallpaperengine`) con persistencia por monitor. El selector interactivo se lanza desde el menú de Omarchy.
 
 ### Arquitectura
 
@@ -78,8 +78,8 @@ Soporta fondos estáticos (`swaybg`) y animados (Wallpaper Engine vía `linux-wa
 ### Flujo
 
 1. **Boot**: `~/.config/hypr/autostart.lua` lanza `~/.config/scripts/restore-wallpapers`.
-2. `restore-wallpapers` lee `~/.config/omarchy/current/wallpapers.conf` (`<monitor>:<tipo>:<valor>`):
-   - `static:` → `swaybg` con la imagen.
+2. `restore-wallpapers` lee `~/.local/state/omarchy/current/wallpapers.conf` (`<monitor>:<tipo>:<valor>`):
+   - `static:` → `omarchy-theme-bg-set` actualiza el fondo del shell de Omarchy.
    - `wallpaper-engine:` → `set-wallpaper-engine <ID> <monitor>`.
 3. `set-wallpaper-engine` loguea en `we-debug.log` y llama a `omarchy-wallpaper-engine`, que:
    - Lanza `linux-wallpaperengine` desde `/mnt/Games/SteamLibrary/steamapps/workshop/content/431960/<ID>`.
@@ -87,7 +87,7 @@ Soporta fondos estáticos (`swaybg`) y animados (Wallpaper Engine vía `linux-wa
    - Actualiza `wallpapers.conf` y el symlink de lockscreen `current/background`.
 4. El selector (`omarchy-background-selector`) permite asignar un fondo estático o de Wallpaper Engine a un monitor concreto.
 
-### Estado persistente (en `~/.config/omarchy/current/`)
+### Estado persistente (en `~/.local/state/omarchy/current/`)
 
 | Archivo | Contenido |
 |---|---|

@@ -27,4 +27,12 @@
   // Example: replace the default About action by reusing the same id. Existing
   // fields are kept unless overridden.
   // "about": {"icon":"","label":"About","action":"omarchy-launch-or-focus-tui \"zsh -c 'fastfetch; read -k 1'\""},
+
+  // Include Wallpaper Engine previews in the Background selector.
+  "style.background": {
+    "icon":"",
+    "label":"Background",
+    "aliases":["background","wallpaper"],
+    "action":"~/.config/scripts/omarchy-background-selector"
+  },
 }

@@ -50,14 +50,16 @@ hyprctl reload
 3. ssh
 4. opencode
 5. hypr
-6. waybar
-7. scripts
+6. scripts
+7. omarchy
 8. omarchy-extensions
 9. alacritty
 10. btop
 11. fastfetch
 12. starship
 13. mimeapps
+
+El paquete `omarchy` contiene la configuración activa de Quickshell en `~/.config/omarchy/shell.json`. Waybar fue retirado tras la migración a Quattro.
 
 ## ⚠️ Importante para portátil
 

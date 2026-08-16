@@ -17,15 +17,17 @@ El script:
 - ✓ Crea backups automáticos de configs existentes
 - ✓ Usa symlinks (cambios en el repo = cambios en sistema)
 - ✓ Valida los destinos de Stow al terminar
-- ✓ Abre el editor para adaptar monitores y la salida de Waybar
+- ✓ Abre el editor para adaptar monitores y la configuración de Quickshell
 - ✓ Pregunta confirmación antes de sobrescribir
 
 ## ⚙️ Configuración específica de portátil
 
-### 1. Monitores (CRÍTICO)
+### 1. Monitores y barra (CRÍTICO)
 El instalador abre estas configuraciones después de desplegar y validar los symlinks:
 - `hypr/.config/hypr/monitors.lua`
-- `waybar/.config/waybar/config.jsonc`
+- `omarchy/.config/omarchy/shell.json`
+
+Quickshell obtiene los nombres de monitores desde Hyprland; no hay una configuración de salida de Waybar que adaptar.
 
 Antes o durante esa edición, consulta las salidas disponibles:
 ```bash
@@ -54,8 +56,13 @@ ls -la ~/.config/ | grep dotfiles
 # Probar Hyprland
 hyprctl reload
 
-# Verificar waybar
-pkill waybar && waybar &
+# Verificar Quickshell
+ps -eo pid,args | grep '[q]uickshell'
+omarchy restart shell
+
+# Verificar la configuración activa
+readlink -f ~/.config/omarchy/shell.json
+cat ~/.config/omarchy/shell.json >/dev/null
 ```
 
 ## 🔄 Flujo de trabajo diario
@@ -82,7 +89,7 @@ cd ~/dotfiles
 ## 📝 Configuraciones incluidas
 
 - ✓ Hyprland (Lua config)
-- ✓ Waybar (Material You theme)
+- ✓ Quickshell/Omarchy (barra y paneles)
 - ✓ Alacritty (terminal)
 - ✓ Bash (aliases, PATH)
 - ✓ Git (config, aliases)
@@ -104,8 +111,10 @@ cd ~/dotfiles
 - Wallpaper Engine no instalado → comentar `restore-wallpapers` en autostart
 - Paths incorrectos en `/mnt/Games/` → editar scripts
 
-### Waybar no aparece
-- Verifica en `waybar/config.jsonc` el `output` (debe ser tu monitor principal)
+### Quickshell no aparece
+- Verifica que `~/.config/omarchy/shell.json` apunte al paquete `omarchy` del repositorio.
+- Reinicia la barra con `omarchy restart shell`.
+- Comprueba el proceso con `ps -eo pid,args | grep '[q]uickshell'`.
 
 ### Permisos de clave pública SSH
 ```bash

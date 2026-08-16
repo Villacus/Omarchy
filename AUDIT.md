@@ -6,7 +6,10 @@
 - `ssh/.ssh/` → parcialmente symlinked (keys sí, known_hosts no debería estar)
 - `opencode/.opencode` → symlinked ✓
 - `hypr/.config/hypr/` → **NO symlinked, copiado directamente**
-- `waybar/.config/waybar/` → **NO symlinked, copiado directamente**
+- `omarchy/.config/omarchy/shell.json` → configuración activa de Quickshell, symlinked ✓
+- `waybar/.config/waybar/` → retirado tras la migración a Quattro
+
+Configuraciones antiguas de Waybar ya no se consideran activas; no existe `~/.config/waybar` ni proceso Waybar.
 - `scripts/.config/scripts/` → **NO symlinked, copiado directamente**
 - `omarchy-extensions/.config/omarchy/extensions/` → **NO symlinked, copiado directamente**
 
@@ -43,8 +46,8 @@
 - `ssh` (solo keys y config, no known_hosts)
 - `opencode`
 - `hypr`
-- `waybar`
 - `scripts`
+- `omarchy` (Quickshell shell.json)
 - `omarchy-extensions`
 - `starship` (nuevo)
 - `alacritty` (nuevo)

@@ -14,7 +14,7 @@ Personal Linux desktop dotfiles for **Omarchy** (Hyprland-based desktop environm
 bash/              → .bashrc with Omarchy defaults, custom aliases, PATH, fastfetch
 git/               → .gitconfig with user info, aliases, LFS filters
 hypr/.config/hypr/ → Hyprland config in Lua (monitors, bindings, input, looknfeel, autostart, hyprlock, hypridle, hyprsunset)
-waybar/.config/    → Waybar status bar (config.jsonc, style.css) with Material You theme (13 modules)
+omarchy/.config/    → Quickshell status bar layout (`shell.json`)
 scripts/.config/   → Custom shell scripts for wallpapers, music control (MPRIS), wallpaper-engine
 omarchy-extensions/→ Omarchy menu extension for multi-monitor wallpaper selector
 opencode/          → OpenCode AI configuration (AGENTS.md with system documentation)
@@ -57,16 +57,16 @@ Main entry point: `hypr/.config/hypr/hyprland.lua`
 
 ## Wallpaper System
 
-**Architecture:** Multi-monitor wallpaper manager supporting static images (via `swaybg`) and animated wallpapers (Wallpaper Engine via `linux-wallpaperengine`). State persists across reboots and theme changes.
+**Architecture:** Multi-monitor wallpaper manager supporting static images through the Omarchy shell and animated wallpapers (Wallpaper Engine via `linux-wallpaperengine`). State persists across reboots and theme changes.
 
 **Key scripts** (in `scripts/.config/scripts/`):
-- `restore-wallpapers` — Boot script (called from `autostart.lua`), reads `~/.config/omarchy/current/wallpapers.conf` and restores per-monitor wallpapers
+- `restore-wallpapers` — Boot script (called from `autostart.lua`), reads `~/.local/state/omarchy/current/wallpapers.conf` and restores per-monitor wallpapers
 - `omarchy-wallpaper-engine` — Main script: launches `linux-wallpaperengine` for a specific monitor, manages PIDs, updates state
 - `set-wallpaper-engine` — Wrapper that logs to `we-debug.log` and delegates to `omarchy-wallpaper-engine`
 - `omarchy-background-selector` — Interactive TUI: select wallpaper → select monitor
 - `setup-wallpaper-engine-previews.sh` — Generates thumbnails from Steam Workshop wallpapers
 
-**State files** (in `~/.config/omarchy/current/`):
+**State files** (in `~/.local/state/omarchy/current/`):
 - `wallpapers.conf` — Per-monitor assignments: `<monitor>:<type>:<value>` (e.g., `DP-2:static:/path/to/image.jpg` or `DP-3:wallpaper-engine:1613667090`)
 - `wallpaper-engine-pids/<MONITOR>.pid` — PIDs for running wallpaper engine instances per monitor
 - `background` — Symlink to current wallpaper for lockscreen
@@ -79,7 +79,7 @@ Main entry point: `hypr/.config/hypr/hyprland.lua`
 **Boot flow:**
 1. `autostart.lua` → `restore-wallpapers`
 2. Reads `wallpapers.conf` line by line
-3. For `static:` → spawns `swaybg -o <monitor> -i <path>`
+3. For `static:` → calls `omarchy-theme-bg-set <path>`, which updates the Omarchy shell background
 4. For `wallpaper-engine:` → calls `set-wallpaper-engine <ID> <monitor>`
 
 **Theme changes:** `omarchy theme set` only regenerates `current/theme/` and does not touch `wallpapers.conf`, so Wallpaper Engine state survives theme switches. Static wallpaper paths reference `current/theme/backgrounds/<file>`, so they break if the new theme lacks that file.
@@ -89,21 +89,28 @@ Main entry point: `hypr/.config/hypr/hyprland.lua`
 ## Music Control
 
 MPRIS integration via custom scripts:
-- `mpris-cliamp.sh` — Waybar module for CLIAMP player status
+- `mpris-cliamp.sh` — CLIAMP/MPRIS status helper (historically used by Waybar)
 - `playpause.sh`, `next.sh`, `prev.sh` — Playback controls
 - `player-volume.sh` — Volume control
 
-## Waybar Configuration
+## Quickshell Configuration
 
-Lives in `waybar/.config/waybar/`:
-- `config.jsonc` — Module layout, bindings, tooltips (13 modules including workspaces, window title, system monitors, clock, tray, MPRIS)
-- `style.css` — Material You theme tokens
+The active Omarchy bar is Quickshell, configured in `omarchy/.config/omarchy/shell.json` and deployed to `~/.config/omarchy/shell.json`.
 
-**Module groups:**
-- `tray-expander` — Collapsible system tray
-- `ctl` — System controls (idle indicator, notifications, updates, bluetooth, network, audio, CPU, memory, disk, battery)
+- `bar.layout.left`, `center`, and `right` define the widget placement.
+- `bar.position` and `bar.transparent` control the bar presentation.
+- `idle.lock` and `idle.screensaver` define shell idle actions.
 
-Output is locked to `DP-2` (primary monitor).
+Theme colors and dimensions are generated under `~/.local/state/omarchy/current/theme/` and are not tracked as personal dotfiles.
+
+Restart the bar with:
+```bash
+omarchy restart shell
+```
+
+The historical Waybar configuration was removed after the Quattro migration; Waybar is not an active component.
+
+Output and monitor assignments remain in `hypr/.config/hypr/monitors.lua`.
 
 ## Common Development Tasks
 
@@ -128,16 +135,16 @@ hyprctl workspaces
 ~/.config/scripts/set-wallpaper-engine <ID> <MONITOR>
 
 # Check logs
-tail -f ~/.config/omarchy/current/we-debug.log
-tail -f ~/.config/omarchy/current/restore-wallpapers.log
+tail -f ~/.local/state/omarchy/current/we-debug.log
+tail -f ~/.local/state/omarchy/current/restore-wallpapers.log
 
 # Regenerate wallpaper previews
 ~/.config/scripts/setup-wallpaper-engine-previews.sh
 ```
 
-**Reload Waybar:**
+**Reload Quickshell:**
 ```bash
-pkill waybar && waybar &
+omarchy restart shell
 ```
 
 **Deployment:**
@@ -151,7 +158,7 @@ To deploy changes: either manually symlink or use a tool like GNU Stow from the 
 
 - **Path assumptions:** Wallpaper Engine scripts hardcode `/mnt/Games/SteamLibrary/` for the Steam library location. Scripts assume `~/.config/scripts/` is symlinked from `scripts/.config/scripts/`.
 
-- **Multi-monitor specificity:** Monitor names (DP-2, DP-3) are hardcoded in several places: `monitors.lua`, `waybar/config.jsonc`, and wallpaper state files. Changing hardware requires updating these references.
+- **Multi-monitor specificity:** Monitor names (DP-2, DP-3) are hardcoded in `monitors.lua` and wallpaper state files. Changing hardware requires updating these references.
 
 - **Lua-based Hyprland config:** Hyprland is configured via Lua DSL (not the traditional `hyprland.conf`). Functions like `hl.monitor()`, `o.bind()`, `hl.workspace_rule()` are part of Omarchy's Lua API.
 

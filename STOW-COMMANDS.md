@@ -7,7 +7,8 @@
 cd ~ && stow -d dotfiles -t ~ hypr
 
 # Instalar varios paquetes
-cd ~ && stow -d dotfiles -t ~ hypr waybar scripts
+cd ~ && stow -d dotfiles -t ~ hypr scripts omarchy omarchy-extensions
+# Waybar fue retirado tras la migración a Quattro.
 
 # Ver qué haría sin hacer cambios (simulación)
 cd ~ && stow -n -v -d dotfiles -t ~ hypr
@@ -18,7 +19,7 @@ cd ~ && stow -n -v -d dotfiles -t ~ hypr
 cd ~ && stow -D -d dotfiles -t ~ hypr
 
 # Desinstalar todos
-cd ~ && stow -D -d dotfiles -t ~ hypr waybar scripts alacritty btop fastfetch starship mimeapps omarchy-extensions bash git ssh opencode
+cd ~ && stow -D -d dotfiles -t ~ hypr scripts omarchy omarchy-extensions alacritty btop fastfetch starship mimeapps bash git ssh opencode
 
 # === ACTUALIZACIÓN ===
 
