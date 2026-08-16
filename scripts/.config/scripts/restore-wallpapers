@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CONFIG_FILE="$HOME/.config/omarchy/current/wallpapers.conf"
-LOG_FILE="$HOME/.config/omarchy/current/restore-wallpapers.log"
+CONFIG_FILE="$HOME/.local/state/omarchy/current/wallpapers.conf"
+LOG_FILE="$HOME/.local/state/omarchy/current/restore-wallpapers.log"
 
 echo "[$(date)] Iniciando restauracion de wallpapers" > "$LOG_FILE"
 
@@ -18,21 +18,20 @@ for i in $(seq 1 30); do
   sleep 1
 done
 
-# Matar instancias anteriores de swaybg y wallpaper-engine
-pkill -x swaybg 2>/dev/null
+# Matar instancias anteriores de wallpaper-engine
 pkill -x linux-wallpaper 2>/dev/null
-rm -f "$HOME/.config/omarchy/current/wallpaper-engine.pid"
-rm -f "$HOME/.config/omarchy/current/wallpaper-engine-pids"/*.pid
+rm -f "$HOME/.local/state/omarchy/current/wallpaper-engine.pid"
+rm -f "$HOME/.local/state/omarchy/current/wallpaper-engine-pids"/*.pid
 
 # Fondo por defecto del tema actual como fallback
-THEME_BG_DIR="$HOME/.config/omarchy/current/theme/backgrounds"
+THEME_BG_DIR="$HOME/.local/state/omarchy/current/theme/backgrounds"
 DEFAULT_BG=$(find -L "$THEME_BG_DIR" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.gif' -o -iname '*.bmp' -o -iname '*.webp' \) 2>/dev/null | sort | head -n1)
 
 apply_static() {
   local monitor="$1" path="$2"
   if [[ -f "$path" ]]; then
-    setsid uwsm-app -- swaybg -o "$monitor" -i "$path" -m fill >/dev/null 2>&1 &
-    ln -sf "$path" "$HOME/.config/omarchy/current/background"
+    # Quattro renders static backgrounds through the Omarchy shell.
+    omarchy-theme-bg-set "$path" >/dev/null 2>&1
     return 0
   fi
   return 1
@@ -44,11 +43,11 @@ while IFS=: read -r monitor type value; do
   if [[ "$type" == "static" ]]; then
     if apply_static "$monitor" "$value"; then
       echo "[$(date)] Restaurando $monitor: static = $value" >> "$LOG_FILE"
-      echo "[$(date)]   -> swaybg en $monitor" >> "$LOG_FILE"
+      echo "[$(date)]   -> fondo de Omarchy en $monitor" >> "$LOG_FILE"
     elif [[ -n "$DEFAULT_BG" ]]; then
       echo "[$(date)] $monitor: no existe '$value', usando fondo del tema" >> "$LOG_FILE"
       apply_static "$monitor" "$DEFAULT_BG"
-      echo "[$(date)]   -> fallback swaybg en $monitor" >> "$LOG_FILE"
+      echo "[$(date)]   -> fallback de Omarchy en $monitor" >> "$LOG_FILE"
     else
       echo "[$(date)]   -> ERROR: archivo no existe: $value" >> "$LOG_FILE"
     fi
@@ -59,7 +58,7 @@ while IFS=: read -r monitor type value; do
     elif [[ -n "$DEFAULT_BG" ]]; then
       echo "[$(date)] $monitor: WE $value no disponible (steam sin montar), usando fondo del tema" >> "$LOG_FILE"
       apply_static "$monitor" "$DEFAULT_BG"
-      echo "[$(date)]   -> fallback swaybg en $monitor" >> "$LOG_FILE"
+      echo "[$(date)]   -> fallback de Omarchy en $monitor" >> "$LOG_FILE"
     else
       echo "[$(date)]   -> ERROR: WE $value no disponible" >> "$LOG_FILE"
     fi

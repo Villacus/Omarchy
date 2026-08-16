@@ -2,7 +2,7 @@
 
 WALLPAPER_ID="$1"
 MONITOR="$2"
-LOG_FILE="$HOME/.config/omarchy/current/we-debug.log"
+LOG_FILE="$HOME/.local/state/omarchy/current/we-debug.log"
 
 echo "[$(date)] Recibido: '$WALLPAPER_ID' Monitor: '$MONITOR'" >> "$LOG_FILE"
 
