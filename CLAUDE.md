@@ -1,223 +1,69 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guía para trabajar en este repositorio de dotfiles de Omarchy sobre CachyOS.
 
-## Overview
+## Modelo del repositorio
 
-Personal Linux desktop dotfiles for **Omarchy** (Hyprland-based desktop environment) on **CachyOS** (Arch Linux). Configs are organized by application and deployed via symlinks (matching GNU Stow structure).
-
-**Owner:** Villacus
-
-## Repository Structure
+El repositorio tiene como raíz el propio `~/.config`. Solo las rutas permitidas en `.gitignore` se versionan; el resto de `~/.config` pertenece a la máquina y permanece local. No se usa GNU Stow.
 
 ```
-bash/              → .bashrc with Omarchy defaults, custom aliases, PATH, fastfetch
-git/               → .gitconfig with user info, aliases, LFS filters
-hypr/.config/hypr/ → Hyprland config in Lua (monitors, bindings, input, looknfeel, autostart, hyprlock, hypridle, hyprsunset)
-waybar/.config/    → Waybar status bar (config.jsonc, style.css) with Material You theme (13 modules)
-scripts/.config/   → Custom shell scripts for wallpapers, music control (MPRIS), wallpaper-engine
-omarchy-extensions/→ Omarchy menu extension for multi-monitor wallpaper selector
-opencode/          → OpenCode AI configuration (AGENTS.md with system documentation)
-ssh/.ssh/          → SSH config (keys gitignored)
+~/.config/
+├── alacritty/       configuración de terminal
+├── btop/            monitor de sistema
+├── fastfetch/       información del sistema
+├── hypr/            Hyprland y overrides `*.local.lua` ignorados
+├── omarchy/         shell Quickshell y extensión del menú
+├── scripts/         helpers de música y wallpapers
+├── starship.toml    prompt
+└── home/            archivos enlazados fuera de ~/.config
 ```
 
-All directories follow the structure `<app>/.config/<app>/` or `<app>/.<config-file>` to mirror `$HOME` when symlinked.
+`home/.bashrc`, `home/.gitconfig` y `home/.opencode/` se enlazan con `install.sh`. La clave SSH privada, `known_hosts`, `mimeapps.list`, secretos, perfiles de navegador, backups y `~/.local/state/` nunca se gestionan aquí.
 
-## Hardware Configuration
+## Hyprland
 
-**Dual monitor setup** — monitor config lives in `hypr/.config/hypr/monitors.lua`:
-- **DP-3** (Philips 200V4): 1600x900@60, left monitor at position 0x180
-- **DP-2** (ASUS VG249Q3R): 1920x1080@180, right monitor at position 1600x100, primary
+La entrada es `hypr/hyprland.lua`. Carga el bootstrap y los módulos comunes de Omarchy, después los módulos de `hypr/`, y finalmente estos overrides locales si existen:
 
-Workspace assignments: workspaces 1,3,5 → DP-2; workspaces 2,4 → DP-3.
+- `hypr/monitors.local.lua` — salidas, resolución y workspaces de cada equipo.
+- `hypr/bindings.local.lua` — programas instalados solo en una máquina.
+- `hypr/autostart.local.lua` — servicios opcionales.
 
-## Hyprland Configuration Architecture
+Copia los ejemplos cuando sea necesario. Ambos equipos usan `main`; no uses `git update-index --skip-worktree` para ocultar hardware local.
 
-Main entry point: `hypr/.config/hypr/hyprland.lua`
+Comprobaciones de Hyprland:
 
-**Module loading pattern:**
-1. Loads Omarchy defaults from `$OMARCHY_PATH` (typically `~/.local/share/omarchy`)
-2. Overrides with user modules from `hypr/.config/hypr/`:
-   - `monitors.lua` — display config, scaling, workspace rules
-   - `input.lua` — keyboard, mouse, touchpad settings
-   - `bindings.lua` — application launches, window management, custom scripts
-   - `looknfeel.lua` — animations, borders, shadows, window rules
-   - `autostart.lua` — apps and scripts to launch at login
-
-**Key bindings** (see `bindings.lua`):
-- Applications: `Super+Return` (terminal), `Super+Shift+B` (browser), `Super+Shift+V` (VSCode)
-- Custom: `Super+Alt+A` (audio output switcher), `Super+Shift+S` (screenshot)
-- Media controls via MPRIS through `scripts/.config/scripts/` helpers
-
-**Related configs:**
-- `hyprlock.conf` — lockscreen styling
-- `hypridle.conf` — idle timeout actions (lock, suspend)
-- `hyprsunset.conf` — blue light filter
-- `xdph.conf` — XDG desktop portal settings
-
-## Wallpaper System
-
-**Architecture:** Multi-monitor wallpaper manager supporting static images (via `swaybg`) and animated wallpapers (Wallpaper Engine via `linux-wallpaperengine`). State persists across reboots and theme changes.
-
-**Key scripts** (in `scripts/.config/scripts/`):
-- `restore-wallpapers` — Boot script (called from `autostart.lua`), reads `~/.config/omarchy/current/wallpapers.conf` and restores per-monitor wallpapers
-- `omarchy-wallpaper-engine` — Main script: launches `linux-wallpaperengine` for a specific monitor, manages PIDs, updates state
-- `set-wallpaper-engine` — Wrapper that logs to `we-debug.log` and delegates to `omarchy-wallpaper-engine`
-- `omarchy-background-selector` — Interactive TUI: select wallpaper → select monitor
-- `setup-wallpaper-engine-previews.sh` — Generates thumbnails from Steam Workshop wallpapers
-
-**State files** (in `~/.config/omarchy/current/`):
-- `wallpapers.conf` — Per-monitor assignments: `<monitor>:<type>:<value>` (e.g., `DP-2:static:/path/to/image.jpg` or `DP-3:wallpaper-engine:1613667090`)
-- `wallpaper-engine-pids/<MONITOR>.pid` — PIDs for running wallpaper engine instances per monitor
-- `background` — Symlink to current wallpaper for lockscreen
-
-**Wallpaper Engine paths:**
-- Workshop content: `/mnt/Games/SteamLibrary/steamapps/workshop/content/431960/<ID>/`
-- Assets: `/mnt/Games/SteamLibrary/steamapps/common/wallpaper_engine/assets`
-- Preview thumbnails: `~/.config/omarchy/backgrounds/wallpaper-engine/wallpaper_<ID>.png`
-
-**Boot flow:**
-1. `autostart.lua` → `restore-wallpapers`
-2. Reads `wallpapers.conf` line by line
-3. For `static:` → spawns `swaybg -o <monitor> -i <path>`
-4. For `wallpaper-engine:` → calls `set-wallpaper-engine <ID> <monitor>`
-
-**Theme changes:** `omarchy theme set` only regenerates `current/theme/` and does not touch `wallpapers.conf`, so Wallpaper Engine state survives theme switches. Static wallpaper paths reference `current/theme/backgrounds/<file>`, so they break if the new theme lacks that file.
-
-**Omarchy menu integration:** `omarchy-extensions/.config/omarchy/extensions/menu.sh` overrides the default background menu to call `omarchy-background-selector`.
-
-## Music Control
-
-MPRIS integration via custom scripts:
-- `mpris-cliamp.sh` — Waybar module for CLIAMP player status
-- `playpause.sh`, `next.sh`, `prev.sh` — Playback controls
-- `player-volume.sh` — Volume control
-
-## Waybar Configuration
-
-Lives in `waybar/.config/waybar/`:
-- `config.jsonc` — Module layout, bindings, tooltips (13 modules including workspaces, window title, system monitors, clock, tray, MPRIS)
-- `style.css` — Material You theme tokens
-
-**Module groups:**
-- `tray-expander` — Collapsible system tray
-- `ctl` — System controls (idle indicator, notifications, updates, bluetooth, network, audio, CPU, memory, disk, battery)
-
-Output is locked to `DP-2` (primary monitor).
-
-## Common Development Tasks
-
-Since this is a dotfiles repository, "development" means editing configs and testing them live.
-
-**Testing Hyprland changes:**
 ```bash
-# Reload Hyprland config (for most changes)
+hyprctl monitors all
+hyprctl configerrors
 hyprctl reload
-
-# Check syntax errors
-lua -c ~/.config/hypr/hyprland.lua
-
-# List monitors and workspaces
-hyprctl monitors
-hyprctl workspaces
 ```
 
-**Testing wallpaper scripts:**
+La configuración común no fija nombres de monitores. Los defaults de Omarchy siguen habilitados; `hypr/bindings.lua` deshace únicamente los bindings que realmente se rebindean.
+
+## Omarchy y scripts
+
+`omarchy/shell.json` configura el shell Quickshell y `omarchy/extensions/` contiene la extensión del menú. Reinicia el shell con `omarchy restart shell`.
+
+Los scripts están en `scripts/`, que corresponde directamente a `~/.config/scripts/`. Sus rutas se calculan desde el propio script; no deben contener `/home/villacus` ni asumir que el repositorio vive en `~/dotfiles`.
+
+Wallpaper Engine es opcional. Su estado permanece en `~/.local/state/omarchy/current/` y su biblioteca se configura con `WALLPAPER_ENGINE_STEAM_LIBRARY` (por defecto `/mnt/Games/SteamLibrary`). Solo activa `restore-wallpapers` desde un `autostart.local.lua` después de verificar `linux-wallpaperengine`, `hyprctl`, `jq` y los assets.
+
+## Flujo de trabajo
+
 ```bash
-# Set wallpaper manually
-~/.config/scripts/set-wallpaper-engine <ID> <MONITOR>
-
-# Check logs
-tail -f ~/.config/omarchy/current/we-debug.log
-tail -f ~/.config/omarchy/current/restore-wallpapers.log
-
-# Regenerate wallpaper previews
-~/.config/scripts/setup-wallpaper-engine-previews.sh
+cd ~/.config
+git status --short --branch
+git pull --ff-only
+./install.sh                 # solo repara enlaces fuera de ~/.config
 ```
 
-**Reload Waybar:**
+Edita directamente los archivos gestionados. Valida scripts antes de recargar. `bash -n a.sh b.sh` solo analiza el primer archivo, así que hay que recorrerlos uno a uno y tratar aparte el script de Python:
+
 ```bash
-pkill waybar && waybar &
+for f in install.sh uninstall.sh scripts/*; do
+  [[ "$f" == scripts/player-volume.sh ]] && { python3 -c "import ast,sys;ast.parse(open(sys.argv[1]).read())" "$f"; continue; }
+  bash -n "$f" || echo "FALLA: $f"
+done
 ```
 
-**Deployment:**
-Configs are deployed by symlinking directories into `$HOME`. This repo uses the same directory structure as the target location (e.g., `bash/.bashrc` → `~/.bashrc`, `hypr/.config/hypr/` → `~/.config/hypr/`).
-
-To deploy changes: either manually symlink or use a tool like GNU Stow from the repo root.
-
-## Important Notes
-
-- **Omarchy integration:** This setup extends Omarchy (a Hyprland-based desktop environment). Many commands and scripts are Omarchy-specific (e.g., `omarchy-menu`, `omarchy-launch-or-focus-tui`, `omarchy theme set`). The default configs are sourced from `$OMARCHY_PATH` (typically `~/.local/share/omarchy`), then overridden by user configs in this repo.
-
-- **Path assumptions:** Wallpaper Engine scripts hardcode `/mnt/Games/SteamLibrary/` for the Steam library location. Scripts assume `~/.config/scripts/` is symlinked from `scripts/.config/scripts/`.
-
-- **Multi-monitor specificity:** Monitor names (DP-2, DP-3) are hardcoded in several places: `monitors.lua`, `waybar/config.jsonc`, and wallpaper state files. Changing hardware requires updating these references.
-
-- **Lua-based Hyprland config:** Hyprland is configured via Lua DSL (not the traditional `hyprland.conf`). Functions like `hl.monitor()`, `o.bind()`, `hl.workspace_rule()` are part of Omarchy's Lua API.
-
-- **Custom API routing:** `.bashrc` sets `ANTHROPIC_BASE_URL=http://localhost:20128` to route Claude Code through a local gateway (OmniRoute) for free tier + fallback routing.
-# CLAUDE.md
-
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
-
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
-
-## 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
-
-## 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
----
-
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+No ejecutes `stow`, no muevas el repositorio a `~/dotfiles` y no copies todo el contenido de `~/.config` al repositorio. Si se necesita una migración desde una instalación anterior, crea primero un backup fechado y conserva la copia de rollback hasta completar las comprobaciones.

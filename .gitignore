@@ -1,0 +1,75 @@
+# This repository is rooted at ~/.config. Keep unrelated config files local.
+/*
+
+# Documentation and migration helpers kept in the repository root.
+!/.gitignore
+!/CLAUDE.md
+!/README.md
+!/install.sh
+!/uninstall.sh
+
+# Managed ~/.config entries.
+!/alacritty/
+/alacritty/*
+!/alacritty/alacritty.toml
+!/btop/
+/btop/*
+!/btop/btop.conf
+!/fastfetch/
+/fastfetch/*
+!/fastfetch/config.jsonc
+!/hypr/
+/hypr/*
+!/hypr/autostart.lua
+!/hypr/autostart.local.lua.example
+!/hypr/bindings.lua
+!/hypr/bindings.local.lua.example
+!/hypr/envs.conf
+!/hypr/hypridle.conf
+!/hypr/hyprland.lua
+!/hypr/hyprlock.conf
+!/hypr/hyprsunset.conf
+!/hypr/input.lua
+!/hypr/looknfeel.lua
+!/hypr/monitors.lua
+!/hypr/monitors.local.lua.example
+/hypr/*.local.lua
+!/omarchy/
+/omarchy/*
+!/omarchy/shell.json
+!/omarchy/extensions/
+/omarchy/extensions/*
+!/omarchy/extensions/menu.sh
+!/omarchy/extensions/omarchy-menu.jsonc
+!/scripts/
+/scripts/*
+!/scripts/mpris-cliamp.sh
+!/scripts/next.sh
+!/scripts/omarchy-background-selector
+!/scripts/omarchy-wallpaper-engine
+!/scripts/player-volume.sh
+!/scripts/playpause.sh
+!/scripts/prev.sh
+!/scripts/restore-wallpapers
+!/scripts/set-wallpaper-engine
+!/scripts/setup-wallpaper-engine-previews.sh
+!/starship.toml
+
+# Files outside ~/.config, linked by install.sh.
+!/home/
+/home/*
+!/home/.bashrc
+!/home/.gitconfig
+!/home/.opencode/
+/home/.opencode/*
+!/home/.opencode/AGENTS.md
+
+# Never store machine-specific SSH material or desktop defaults.
+/home/.ssh/
+/mimeapps.list
+
+# Generated and machine-local state.
+**/__pycache__/
+**/*.py[cod]
+**/*.bak.*
+/btop/themes/current.theme

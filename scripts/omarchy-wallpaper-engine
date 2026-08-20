@@ -1,0 +1,115 @@
+#!/bin/bash
+
+STEAM_LIBRARY="${WALLPAPER_ENGINE_STEAM_LIBRARY:-/mnt/Games/SteamLibrary}"
+WALLPAPER_PATH="$STEAM_LIBRARY/steamapps/workshop/content/431960"
+ASSETS_DIR="$STEAM_LIBRARY/steamapps/common/wallpaper_engine/assets"
+
+# Guardas de dependencias
+if ! command -v linux-wallpaperengine >/dev/null 2>&1; then
+  echo "❌ linux-wallpaperengine no está instalado"
+  exit 1
+fi
+
+if ! command -v awk >/dev/null 2>&1; then
+  echo "❌ awk es necesario para actualizar wallpapers.conf"
+  exit 1
+fi
+
+if [[ ! -d "$ASSETS_DIR" ]]; then
+  echo "❌ Assets de Wallpaper Engine no encontrados: $ASSETS_DIR"
+  exit 1
+fi
+
+# hyprctl y jq solo se usan cuando hay que deducir el monitor.
+if [[ -z "$2" ]]; then
+  for dep in hyprctl jq; do
+    if ! command -v "$dep" >/dev/null 2>&1; then
+      echo "❌ $dep es necesario para detectar el monitor"
+      exit 1
+    fi
+  done
+fi
+
+if [[ -z "$2" ]] && [[ -z "${WAYLAND_DISPLAY:-}" ]]; then
+  echo "❌ No hay una sesión Wayland activa para detectar el monitor"
+  exit 1
+fi
+
+STATE_DIR="$HOME/.local/state/omarchy/current"
+mkdir -p "$STATE_DIR"
+PID_DIR="$STATE_DIR/wallpaper-engine-pids"
+CONFIG_FILE="$STATE_DIR/wallpapers.conf"
+
+if [[ -z "$1" ]]; then
+  echo "Uso: omarchy-wallpaper-engine <ID> [MONITOR]"
+  exit 1
+fi
+
+WALLPAPER_ID="$1"
+MONITOR="$2"
+WALLPAPER_FOLDER="$WALLPAPER_PATH/$WALLPAPER_ID"
+
+if [[ ! -d "$WALLPAPER_FOLDER" ]]; then
+  echo "❌ Wallpaper no encontrado: $WALLPAPER_ID"
+  exit 1
+fi
+
+# Si no se especifica monitor, obtener el principal desde Hyprland.
+if [[ -z "$MONITOR" ]]; then
+  MONITOR=$(hyprctl monitors -j | jq -r 'map(select(.focused))[0].name // .[0].name' 2>/dev/null)
+fi
+
+if [[ -z "$MONITOR" || "$MONITOR" == "null" ]]; then
+  echo "❌ No se pudo detectar un monitor"
+  exit 1
+fi
+
+mkdir -p "$PID_DIR"
+PID_FILE="$PID_DIR/$MONITOR.pid"
+
+# Matar solo la instancia de este monitor
+if [[ -f "$PID_FILE" ]]; then
+  OLD_PID=$(cat "$PID_FILE")
+  if kill -0 "$OLD_PID" 2>/dev/null; then
+    kill "$OLD_PID"
+    sleep 0.5
+  fi
+  rm -f "$PID_FILE"
+fi
+
+echo "🎨 Configurando wallpaper: $WALLPAPER_ID en monitor: $MONITOR"
+
+nohup linux-wallpaperengine \
+  --assets-dir "$ASSETS_DIR" \
+  --screen-root "$MONITOR" \
+  --scaling fill \
+  -bg "$WALLPAPER_FOLDER" \
+  --silent \
+  --noautomute \
+  --no-audio-processing \
+  --disable-particles \
+  --disable-mouse \
+  --volume 15 \
+  --fps 30 \
+  > /dev/null 2>&1 &
+
+WPID=$!
+echo $WPID > "$PID_FILE"
+# Mantener también el .pid legacy por compatibilidad
+echo $WPID > "$STATE_DIR/wallpaper-engine.pid"
+
+# Guardar asignacion para restaurar al encender.
+# Se usa un archivo temporal y awk para evitar que el nombre del monitor se interprete como regex.
+if [[ -f "$CONFIG_FILE" ]]; then
+  awk -F: -v m="$MONITOR" '$1 != m' "$CONFIG_FILE" > "$CONFIG_FILE.tmp"
+  mv "$CONFIG_FILE.tmp" "$CONFIG_FILE"
+fi
+echo "$MONITOR:wallpaper-engine:$WALLPAPER_ID" >> "$CONFIG_FILE"
+
+# Actualizar symlink del lockscreen
+PREVIEW_FILE="$HOME/.config/omarchy/backgrounds/wallpaper-engine/wallpaper_$WALLPAPER_ID.png"
+if [[ -f "$PREVIEW_FILE" ]]; then
+  ln -sf "$PREVIEW_FILE" "$STATE_DIR/background"
+fi
+
+echo "✓ Wallpaper en ejecución (PID: $WPID) en $MONITOR"

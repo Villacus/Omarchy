@@ -1,5 +1,0 @@
-# SSH: ignorar archivos específicos de cada máquina
-\.gitignore$
-id_ed25519$
-known_hosts.*
-^agent$

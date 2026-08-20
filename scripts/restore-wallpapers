@@ -1,0 +1,88 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+STEAM_LIBRARY="${WALLPAPER_ENGINE_STEAM_LIBRARY:-/mnt/Games/SteamLibrary}"
+WALLPAPER_PATH="$STEAM_LIBRARY/steamapps/workshop/content/431960"
+CONFIG_FILE="$HOME/.local/state/omarchy/current/wallpapers.conf"
+LOG_FILE="$HOME/.local/state/omarchy/current/restore-wallpapers.log"
+
+mkdir -p -- "$(dirname -- "$LOG_FILE")"
+echo "[$(date)] Iniciando restauracion de wallpapers" > "$LOG_FILE"
+
+for dep in hyprctl jq; do
+  if ! command -v "$dep" >/dev/null 2>&1; then
+    echo "[$(date)] Falta $dep; no se restaura nada" >> "$LOG_FILE"
+    exit 0
+  fi
+done
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "[$(date)] No hay configuracion guardada" >> "$LOG_FILE"
+  exit 0
+fi
+
+# Esperar a que hyprland y los monitores esten listos
+monitors_ready=false
+for i in $(seq 1 30); do
+  if hyprctl monitors >/dev/null 2>&1 && [[ -n "$(hyprctl monitors -j 2>/dev/null | jq -r '.[].name' 2>/dev/null)" ]]; then
+    monitors_ready=true
+    break
+  fi
+  sleep 1
+done
+
+if [[ "$monitors_ready" != true ]]; then
+  echo "[$(date)] Hyprland no expuso monitores en 30s; se aborta" >> "$LOG_FILE"
+  exit 0
+fi
+
+# Matar instancias anteriores de wallpaper-engine. El binario se llama
+# linux-wallpaperengine y pkill -x exige el nombre exacto.
+pkill -x linux-wallpaperengine 2>/dev/null
+rm -f "$HOME/.local/state/omarchy/current/wallpaper-engine.pid"
+rm -f "$HOME/.local/state/omarchy/current/wallpaper-engine-pids"/*.pid
+
+# Fondo por defecto del tema actual como fallback
+THEME_BG_DIR="$HOME/.local/state/omarchy/current/theme/backgrounds"
+DEFAULT_BG=$(find -L "$THEME_BG_DIR" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.gif' -o -iname '*.bmp' -o -iname '*.webp' \) 2>/dev/null | sort | head -n1)
+
+apply_static() {
+  local monitor="$1" path="$2"
+  # Note: omarchy-theme-bg-set writes a single symlink for the global background,
+  # so multiple static entries in wallpapers.conf are not supported per monitor.
+  if [[ -f "$path" ]]; then
+    omarchy-theme-bg-set "$path" >/dev/null 2>&1
+    return 0
+  fi
+  return 1
+}
+
+while IFS=: read -r monitor type value; do
+  [[ -z "$monitor" ]] && continue
+
+  if [[ "$type" == "static" ]]; then
+    if apply_static "$monitor" "$value"; then
+      echo "[$(date)] Restaurando $monitor: static = $value" >> "$LOG_FILE"
+      echo "[$(date)]   -> fondo de Omarchy en $monitor" >> "$LOG_FILE"
+    elif [[ -n "$DEFAULT_BG" ]]; then
+      echo "[$(date)] $monitor: no existe '$value', usando fondo del tema" >> "$LOG_FILE"
+      apply_static "$monitor" "$DEFAULT_BG"
+      echo "[$(date)]   -> fallback de Omarchy en $monitor" >> "$LOG_FILE"
+    else
+      echo "[$(date)]   -> ERROR: archivo no existe: $value" >> "$LOG_FILE"
+    fi
+  elif [[ "$type" == "wallpaper-engine" ]]; then
+    if [[ -d "$WALLPAPER_PATH/$value" ]]; then
+      echo "[$(date)] Restaurando $monitor: wallpaper-engine = $value" >> "$LOG_FILE"
+      "$SCRIPT_DIR/set-wallpaper-engine" "$value" "$monitor" >> "$LOG_FILE" 2>&1
+    elif [[ -n "$DEFAULT_BG" ]]; then
+      echo "[$(date)] $monitor: WE $value no disponible (steam sin montar), usando fondo del tema" >> "$LOG_FILE"
+      apply_static "$monitor" "$DEFAULT_BG"
+      echo "[$(date)]   -> fallback de Omarchy en $monitor" >> "$LOG_FILE"
+    else
+      echo "[$(date)]   -> ERROR: WE $value no disponible" >> "$LOG_FILE"
+    fi
+  fi
+done < "$CONFIG_FILE"
+
+echo "[$(date)] Restauracion completa" >> "$LOG_FILE"
