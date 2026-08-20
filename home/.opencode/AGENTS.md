@@ -132,5 +132,71 @@ Los apuntes históricos de CLIAMP y Waybar se conservan solo como referencia; Wa
 ### omarchy restart shell
 - `omarchy restart shell`.
 
+## Los dos equipos
+
+| Equipo | Rol | Acceso |
+|---|---|---|
+| `Portilla` | Portátil | local |
+| `Omyilla` | Sobremesa | `ssh villacus@Omyilla` |
+
+Ambos usan la rama `main`. El sobremesa tiene mucho más instalado: `cliamp`,
+`hyprsunset`, `linux-wallpaperengine`, `omarchy-we`, `code`, `steam`,
+`discord`, `lazydocker`. En el portátil faltan y por eso las guardas de
+binario (`o.cmd_present`, `command -v`) son obligatorias en todo lo versionado.
+
+### Plugins del shell (solo en el sobremesa)
+
+`~/.config/omarchy/plugins/` no se versiona (miles de archivos), pero
+`omarchy/shell.json` **sí** los declara. Los 7 instalados en el sobremesa:
+
+```
+bobbynicholas.omaland                    io.github.ricky.whatsapp
+io.github.dkgamer02ai.wallpaper-engine   io.github.sirjul1337.lock-explorer
+io.github.dotnetemmanuel.vitals          mirador
+wian47.removable-drives
+```
+
+- **Un `shell.json` compartido es seguro.** Si un id de plugin o de widget no
+  está instalado, `Bar.qml` deja `registryComponent` en `null` y simplemente no
+  dibuja nada; no hay error. Verificado en vivo en el portátil con 0 plugins.
+- `plugins[].design = "island"` es la clave que activa
+  `omarchy/lock-designs/Island.qml` mediante `lock-explorer`.
+- `mirador` da la vista general de workspaces; se invoca desde `bindings.lua`
+  con `omarchy-shell shell toggle mirador '{}'`.
+- `omaland` inyecta un bloque gestionado con vallas (`omaland managed block`)
+  dentro de `hypr/looknfeel.lua`. No editar dentro de las vallas.
+
+### Trampa: plugins que escriben en archivos versionados
+
+El plugin `omarchy-we` añade `o.launch_on_start("omarchy-we launch")` al
+archivo **versionado** `hypr/autostart.lua`, sin guarda de binario. Eso rompe
+el portátil y ensucia el árbol. Al detectarlo: `git checkout -- hypr/autostart.lua`
+y dejar lo específico del equipo en `hypr/autostart.local.lua` (ignorado).
+Lo mismo con `omarchy-menu.jsonc`, aunque ahí su entrada sí lleva `when`, así
+que es inofensiva y se puede commitear.
+
+**Un solo restaurador de wallpapers al arrancar.** `scripts/restore-wallpapers`
+y `omarchy-we launch` hacen lo mismo y se pelean por los monitores. En el
+sobremesa se conserva únicamente `restore-wallpapers` en `autostart.local.lua`.
+
+### hyprctl por SSH
+
+`hyprctl` no encuentra la sesión sin estas dos variables:
+
+```bash
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+export HYPRLAND_INSTANCE_SIGNATURE="$(ls -t "$XDG_RUNTIME_DIR/hypr" | head -1)"
+```
+
+`hyprctl binds -j` devuelve las teclas en mayúsculas (`TAB`, no `Tab`) y como
+`dispatcher: "__lua"` con un índice en `arg` cuando el bind viene de `o.bind`,
+así que no se puede buscar el comando por texto en la salida.
+
+### Rama de rescate
+
+En el sobremesa, `rescate/escritorio-20260820` (commit `7d18432`) guarda su
+configuración anterior al reset que borró la de plugins. No borrarla sin
+permiso.
+
 ## Regla final para agentes
 - **Si aprendes algo nuevo sobre el sistema del usuario** (rutas, configs, bugs, workarounds, comportamiento de programas), **documéntalo aquí inmediatamente**. No esperes a que te lo pidan. Esto asegura que el conocimiento persista entre sesiones.
