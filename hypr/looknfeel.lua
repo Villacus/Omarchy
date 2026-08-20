@@ -131,3 +131,27 @@ hl.animation({
 
 -- Sweet Nova cursor theme
 hl.env("XCURSOR_THEME", "Sweet-cursors")
+
+-- >>> omaland managed block >>>
+-- Written by Omaland. Safe to hand-edit: Omaland re-reads this block
+-- every time it opens, and only ever rewrites what's between the fences.
+hl.config({
+  decoration = {
+    active_opacity = 0.97,
+    dim_inactive = true,
+    inactive_opacity = 0.94,
+
+    blur = {
+      enabled = false,
+    },
+
+    glow = {
+      enabled = false,
+    },
+
+    shadow = {
+      enabled = false,
+    },
+  },
+})
+-- <<< omaland managed block <<<
