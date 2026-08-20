@@ -1,241 +1,142 @@
 #!/usr/bin/env bash
-# Script de instalación de dotfiles con stow
-# Uso: ./install.sh [--force]
+# Instala los enlaces fuera de ~/.config. El repositorio vive en ~/.config.
 
-set -e
+set -euo pipefail
 
-DOTFILES_DIR="$HOME/dotfiles"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+EXPECTED_ROOT="$HOME/.config"
 FORCE=false
 
-# Colores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Parsear argumentos
-if [[ "$1" == "--force" ]]; then
-    FORCE=true
-fi
+usage() {
+  cat <<'EOF'
+Uso: ./install.sh [--force] [--help]
 
-echo -e "${GREEN}=== Instalación de Dotfiles ===${NC}\n"
+Enlaza los tres archivos que viven fuera de ~/.config:
+  ~/.bashrc     -> ~/.config/home/.bashrc
+  ~/.gitconfig  -> ~/.config/home/.gitconfig
+  ~/.opencode   -> ~/.config/home/.opencode
 
-# Verificar que estamos en el directorio correcto
-if [[ ! -f "$DOTFILES_DIR/install.sh" ]]; then
-    echo -e "${RED}Error: Este script debe ejecutarse desde $DOTFILES_DIR${NC}"
-    exit 1
-fi
+Los archivos de ~/.config son el repositorio: no se copian ni se enlazan.
 
-# Verificar que stow está instalado
-if ! command -v stow &> /dev/null; then
-    echo -e "${RED}Error: GNU Stow no está instalado${NC}"
-    echo "Instálalo con: sudo pacman -S stow"
-    exit 1
-fi
+  --force   No pedir confirmación.
+  --help    Mostrar esta ayuda y salir.
 
-# Función para crear backup
-backup_config() {
-    local config_path="$1"
-    if [[ -e "$config_path" ]] && [[ ! -L "$config_path" ]]; then
-        local backup_name="$(basename "$config_path").backup-$(date +%Y%m%d-%H%M%S)"
-        local backup_dir="$(dirname "$config_path")"
-        echo -e "${YELLOW}  Creando backup: $backup_name${NC}"
-        mv "$config_path" "$backup_dir/$backup_name"
-        return 0
-    fi
-    return 1
+Si alguno de los destinos ya existe se mueve a <destino>.backup-<fecha> antes
+de crear el enlace. Para ~/.opencode eso mueve el directorio entero, con todo
+su contenido, al backup.
+EOF
 }
 
-validate_link() {
-    local target="$1"
-    local source="$2"
-    local target_path
-    local source_path
+if [[ "${1:-}" == "--force" ]]; then
+  FORCE=true
+elif [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  usage
+  exit 0
+elif [[ -n "${1:-}" ]]; then
+  printf '%b\n' "${RED}Uso: $0 [--force] [--help]${NC}" >&2
+  exit 2
+fi
 
-    if [[ ! -L "$target" ]]; then
-        echo -e "${RED}Error: $target no es un symlink${NC}"
-        return 1
-    fi
+if [[ "$ROOT" != "$EXPECTED_ROOT" ]]; then
+  printf '%b\n' "${RED}Error: el repositorio debe estar en $EXPECTED_ROOT (actual: $ROOT)${NC}" >&2
+  exit 1
+fi
 
-    if ! target_path="$(readlink -f -- "$target")"; then
-        echo -e "${RED}Error: $target es un symlink roto${NC}"
-        return 1
-    fi
+STAMP="$(date +%Y%m%d-%H%M%S)"
 
-    if ! source_path="$(readlink -f -- "$source")"; then
-        echo -e "${RED}Error: no se puede resolver el origen esperado $source${NC}"
-        return 1
-    fi
+backup_target() {
+  local target="$1"
+  local backup="${target}.backup-${STAMP}"
 
-    if [[ "$target_path" != "$source_path" ]]; then
-        echo -e "${RED}Error: $target apunta a $target_path, se esperaba $source_path${NC}"
-        return 1
-    fi
+  if [[ -e "$target" || -L "$target" ]]; then
+    mv -- "$target" "$backup"
+    printf '%b\n' "  ${YELLOW}Backup: $backup${NC}"
+  fi
 }
 
-EDITOR_COMMAND=()
+link_home_file() {
+  local target="$1"
+  local source="$2"
+  local resolved
 
-select_editor() {
-    local configured_editor
-    local fallback_editor
+  if [[ -L "$target" ]]; then
+    resolved="$(readlink -f -- "$target" 2>/dev/null || true)"
+    if [[ "$resolved" == "$source" ]]; then
+      printf '%b\n' "  ${GREEN}✓${NC} $target"
+      return
+    fi
+    backup_target "$target"
+  elif [[ -e "$target" ]]; then
+    backup_target "$target"
+  fi
 
-    for configured_editor in "$VISUAL" "$EDITOR"; do
-        if [[ -n "$configured_editor" ]]; then
-            read -r -a EDITOR_COMMAND <<< "$configured_editor"
-            if command -v "${EDITOR_COMMAND[0]}" &> /dev/null; then
-                return 0
-            fi
-        fi
-    done
-
-    for fallback_editor in nvim vim nano; do
-        if command -v "$fallback_editor" &> /dev/null; then
-            EDITOR_COMMAND=("$fallback_editor")
-            return 0
-        fi
-    done
-
-    echo -e "${RED}Error: no se encontró un editor. Configura VISUAL o EDITOR.${NC}"
-    return 1
+  mkdir -p -- "$(dirname -- "$target")"
+  ln -s -- "$source" "$target"
+  printf '%b\n' "  ${GREEN}✓${NC} $target -> $source"
 }
 
-# Paquetes a instalar con stow
-PACKAGES=(
-    "bash"
-    "git"
-    "ssh"
-    "opencode"
-    "hypr"
-    "waybar"
-    "scripts"
-    "omarchy-extensions"
-    "alacritty"
-    "btop"
-    "fastfetch"
-    "starship"
-    "mimeapps"
+required=(
+  alacritty/alacritty.toml
+  btop/btop.conf
+  fastfetch/config.jsonc
+  home/.bashrc
+  home/.gitconfig
+  home/.opencode/AGENTS.md
+  hypr/hyprland.lua
+  hypr/monitors.lua
+  omarchy/shell.json
+  scripts/omarchy-background-selector
+  starship.toml
 )
 
-# Configuraciones que pueden necesitar backup
-CONFIGS_TO_BACKUP=(
-    "$HOME/.bashrc"
-    "$HOME/.gitconfig"
-    "$HOME/.config/hypr"
-    "$HOME/.config/waybar"
-    "$HOME/.config/scripts"
-    "$HOME/.config/omarchy/extensions"
-    "$HOME/.config/alacritty"
-    "$HOME/.config/btop"
-    "$HOME/.config/fastfetch"
-    "$HOME/.config/starship.toml"
-    "$HOME/.config/mimeapps.list"
-)
-
-# Crear backups si es necesario
-if [[ "$FORCE" == false ]]; then
-    echo -e "${YELLOW}Verificando archivos existentes...${NC}"
-    NEEDS_BACKUP=false
-    for config in "${CONFIGS_TO_BACKUP[@]}"; do
-        if [[ -e "$config" ]] && [[ ! -L "$config" ]]; then
-            NEEDS_BACKUP=true
-            break
-        fi
-    done
-
-    if [[ "$NEEDS_BACKUP" == true ]]; then
-        echo -e "${YELLOW}Se encontraron configuraciones existentes.${NC}"
-        echo "Se crearán backups con el sufijo .backup-TIMESTAMP"
-        read -p "¿Continuar? (s/n) " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[SsYy]$ ]]; then
-            echo -e "${RED}Instalación cancelada${NC}"
-            exit 1
-        fi
-
-        for config in "${CONFIGS_TO_BACKUP[@]}"; do
-            backup_config "$config" || true
-        done
-    fi
-fi
-
-# Crear directorio .config si no existe
-mkdir -p "$HOME/.config"
-
-# Crear directorio omarchy si no existe (para extensions)
-mkdir -p "$HOME/.config/omarchy"
-
-echo -e "\n${GREEN}Instalando paquetes con stow...${NC}"
-
-# Instalar cada paquete
-for package in "${PACKAGES[@]}"; do
-    if [[ ! -d "$DOTFILES_DIR/$package" ]]; then
-        echo -e "${RED}Error: Paquete no encontrado: $package${NC}"
-        exit 1
-    fi
-
-    echo -e "  ${GREEN}✓${NC} Instalando $package"
-    stow -d "$DOTFILES_DIR" -t "$HOME" "$package"
+for path in "${required[@]}"; do
+  # -e sigue los enlaces, asi que un symlink roto se detecta aparte para
+  # distinguirlo de un archivo que simplemente no esta en el repositorio.
+  if [[ -L "$ROOT/$path" && ! -e "$ROOT/$path" ]]; then
+    printf '%b\n' "${RED}Error: $ROOT/$path es un enlace roto${NC}" >&2
+    exit 1
+  fi
+  if [[ ! -e "$ROOT/$path" ]]; then
+    printf '%b\n' "${RED}Error: falta $ROOT/$path${NC}" >&2
+    exit 1
+  fi
 done
 
-echo -e "\n${GREEN}Validando symlinks de stow...${NC}"
-VALIDATION_LINKS=(
-    "$HOME/.bashrc:$DOTFILES_DIR/bash/.bashrc"
-    "$HOME/.gitconfig:$DOTFILES_DIR/git/.gitconfig"
-    "$HOME/.opencode:$DOTFILES_DIR/opencode/.opencode"
-    "$HOME/.config/hypr:$DOTFILES_DIR/hypr/.config/hypr"
-    "$HOME/.config/waybar:$DOTFILES_DIR/waybar/.config/waybar"
-    "$HOME/.config/scripts:$DOTFILES_DIR/scripts/.config/scripts"
-    "$HOME/.config/omarchy/extensions:$DOTFILES_DIR/omarchy-extensions/.config/omarchy/extensions"
-    "$HOME/.config/alacritty:$DOTFILES_DIR/alacritty/.config/alacritty"
-    "$HOME/.config/btop:$DOTFILES_DIR/btop/.config/btop"
-    "$HOME/.config/fastfetch:$DOTFILES_DIR/fastfetch/.config/fastfetch"
-    "$HOME/.config/starship.toml:$DOTFILES_DIR/starship/.config/starship.toml"
-    "$HOME/.config/mimeapps.list:$DOTFILES_DIR/mimeapps/.config/mimeapps.list"
+link_targets=(
+  "$HOME/.bashrc:$ROOT/home/.bashrc"
+  "$HOME/.gitconfig:$ROOT/home/.gitconfig"
+  "$HOME/.opencode:$ROOT/home/.opencode"
 )
 
-for link in "${VALIDATION_LINKS[@]}"; do
-    target="${link%%:*}"
-    source="${link#*:}"
-    validate_link "$target" "$source"
-done
-
-if [[ -f "$DOTFILES_DIR/ssh/.ssh/id_ed25519.pub" ]]; then
-    validate_link "$HOME/.ssh/id_ed25519.pub" "$DOTFILES_DIR/ssh/.ssh/id_ed25519.pub"
+if [[ "$FORCE" != true ]]; then
+  for target_spec in "${link_targets[@]}"; do
+    target="${target_spec%%:*}"
+    if [[ -e "$target" || -L "$target" ]]; then
+      if [[ -d "$target" && ! -L "$target" ]]; then
+        printf '%b\n' "${YELLOW}Existe $target y es un directorio real; se moverá completo (con su contenido) al backup antes de enlazarlo.${NC}"
+      else
+        printf '%b\n' "${YELLOW}Existe $target; se creará un backup antes de enlazarlo.${NC}"
+      fi
+    fi
+  done
+  read -r -p "¿Continuar? (s/n) " answer
+  [[ "$answer" =~ ^[SsYy]$ ]] || { echo "Instalación cancelada"; exit 1; }
 fi
 
-# Eliminar solo el symlink roto que dejó una versión previa del paquete SSH.
-if [[ -L "$HOME/.ssh/agent" ]] && [[ ! -e "$HOME/.ssh/agent" ]]; then
-    echo -e "${YELLOW}  Eliminando symlink roto: ~/.ssh/agent${NC}"
-    rm "$HOME/.ssh/agent"
-fi
+printf '%b\n' "${GREEN}=== Instalando enlaces de ~/.config ===${NC}"
+link_home_file "$HOME/.bashrc" "$ROOT/home/.bashrc"
+link_home_file "$HOME/.gitconfig" "$ROOT/home/.gitconfig"
+link_home_file "$HOME/.opencode" "$ROOT/home/.opencode"
 
-echo -e "${YELLOW}\nRevisa los monitores disponibles con: hyprctl monitors${NC}"
-select_editor
-"${EDITOR_COMMAND[@]}" \
-    "$DOTFILES_DIR/hypr/.config/hypr/monitors.lua" \
-    "$DOTFILES_DIR/waybar/.config/waybar/config.jsonc"
+printf '%b\n' "${GREEN}=== Instalación completada ===${NC}"
+printf '%b\n' "${YELLOW}Los archivos de ~/.config son el repositorio; no se copian ni se enlazan.${NC}"
+printf '%b\n' "${YELLOW}Para adaptar hardware, copia hypr/monitors.local.lua.example a hypr/monitors.local.lua.${NC}"
+exit 0
 
-echo -e "\n${GREEN}=== Instalación completada ===${NC}"
-echo -e "\nSymlinks creados y validados en:"
-echo "  - ~/.bashrc"
-echo "  - ~/.gitconfig"
-echo "  - ~/.ssh/id_ed25519.pub (si existe en el paquete)"
-echo "  - ~/.config/hypr/"
-echo "  - ~/.config/waybar/"
-echo "  - ~/.config/scripts/"
-echo "  - ~/.config/omarchy/extensions/"
-echo "  - ~/.config/alacritty/"
-echo "  - ~/.config/btop/"
-echo "  - ~/.config/fastfetch/"
-echo "  - ~/.config/starship.toml"
-echo "  - ~/.config/mimeapps.list"
-
-echo -e "\n${YELLOW}Nota importante para portátil:${NC}"
-echo "  - Ajusta monitores.lua y el output de Waybar en el editor que se abrió"
-echo "  - Los paths de Wallpaper Engine están hardcoded para /mnt/Games/"
-echo "  - Si no tienes Omarchy instalado, necesitarás instalarlo primero"
-echo "  - La clave SSH privada se gestiona manualmente y no la toca este script"
-
-echo -e "\n${GREEN}Para desinstalar:${NC}"
-echo "  stow -D -d $DOTFILES_DIR -t \$HOME <paquete>"
-echo "  o ejecuta: ./uninstall.sh"
+# Keep the script intentionally short: all sources are preflighted above and
+# only the three external home links are managed here.

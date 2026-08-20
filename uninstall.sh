@@ -1,63 +1,79 @@
 #!/usr/bin/env bash
-# Script de desinstalación de dotfiles
-# Elimina todos los symlinks creados por stow
+# Retira los enlaces que install.sh crea fuera de ~/.config.
 
-set -e
+set -euo pipefail
 
-DOTFILES_DIR="$HOME/dotfiles"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+EXPECTED_ROOT="$HOME/.config"
+FORCE=false
 
-# Colores
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+usage() {
+  cat <<'EOF'
+Uso: ./uninstall.sh [--force] [--help]
 
-echo -e "${YELLOW}=== Desinstalación de Dotfiles ===${NC}\n"
+Elimina los enlaces que install.sh crea fuera de ~/.config, y solo si apuntan
+al repositorio:
+  ~/.bashrc
+  ~/.gitconfig
+  ~/.opencode
 
-# Verificar directorio
-if [[ ! -d "$DOTFILES_DIR" ]]; then
-    echo -e "${RED}Error: Directorio $DOTFILES_DIR no encontrado${NC}"
-    exit 1
+No se modifica ~/.config ni se eliminan los backups .backup-<fecha>.
+
+  --force   No pedir confirmación.
+  --help    Mostrar esta ayuda y salir.
+EOF
+}
+
+if [[ "${1:-}" == "--force" ]]; then
+  FORCE=true
+elif [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  usage
+  exit 0
+elif [[ -n "${1:-}" ]]; then
+  printf 'Uso: %s [--force] [--help]\n' "$0" >&2
+  exit 2
 fi
 
-# Paquetes a desinstalar
-PACKAGES=(
-    "bash"
-    "git"
-    "ssh"
-    "opencode"
-    "hypr"
-    "waybar"
-    "scripts"
-    "omarchy-extensions"
-    "alacritty"
-    "btop"
-    "fastfetch"
-    "starship"
-    "mimeapps"
-)
-
-echo -e "${YELLOW}Esto eliminará todos los symlinks creados por stow${NC}"
-read -p "¿Continuar? (s/n) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[SsYy]$ ]]; then
-    echo -e "${RED}Desinstalación cancelada${NC}"
-    exit 1
+if [[ "$ROOT" != "$EXPECTED_ROOT" ]]; then
+  printf 'Error: el repositorio debe estar en %s (actual: %s)\n' "$EXPECTED_ROOT" "$ROOT" >&2
+  exit 1
 fi
 
-cd "$HOME"
+if [[ "$FORCE" != true ]]; then
+  printf 'Se eliminarán solo estos enlaces, si apuntan al repositorio:\n'
+  printf '  ~/.bashrc\n  ~/.gitconfig\n  ~/.opencode\n'
+  read -r -p '¿Continuar? (s/n) ' answer
+  [[ "$answer" =~ ^[SsYy]$ ]] || { echo 'Desinstalación cancelada'; exit 1; }
+fi
 
-# Desinstalar cada paquete
-for package in "${PACKAGES[@]}"; do
-    if [[ ! -d "$DOTFILES_DIR/$package" ]]; then
-        echo -e "${RED}Error: Paquete no encontrado: $package${NC}"
-        exit 1
-    fi
+remove_link() {
+  local target="$1"
+  local source="$2"
+  local resolved
 
-    echo -e "  ${GREEN}✓${NC} Desinstalando $package"
-    stow -D -d "$DOTFILES_DIR" -t "$HOME" "$package"
-done
+  if [[ ! -L "$target" ]]; then
+    printf '  - %s: no es un enlace gestionado\n' "$target"
+    return
+  fi
 
-echo -e "\n${GREEN}=== Desinstalación completada ===${NC}"
-echo -e "\n${YELLOW}Los archivos de backup (.backup-*) no fueron eliminados${NC}"
-echo "Revísalos manualmente en ~/.config/ y ~/"
+  # readlink -f resuelve la ruta completa, pero devuelve vacio si el enlace esta
+  # colgado; en ese caso se compara el destino literal para poder retirar un
+  # enlace gestionado que apunte a un archivo ya inexistente del repositorio.
+  resolved="$(readlink -f -- "$target" 2>/dev/null || true)"
+  if [[ -z "$resolved" ]]; then
+    resolved="$(readlink -- "$target" 2>/dev/null || true)"
+  fi
+
+  if [[ "$resolved" != "$source" ]]; then
+    printf '  - %s: se conserva (apunta a %s)\n' "$target" "${resolved:-destino desconocido}"
+    return
+  fi
+
+  rm -- "$target"
+  printf '  ✓ %s\n' "$target"
+}
+
+remove_link "$HOME/.bashrc" "$ROOT/home/.bashrc"
+remove_link "$HOME/.gitconfig" "$ROOT/home/.gitconfig"
+remove_link "$HOME/.opencode" "$ROOT/home/.opencode"
+printf '\nDesinstalación completada; no se modificó ~/.config ni se eliminaron backups.\n'

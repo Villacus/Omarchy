@@ -1,0 +1,5 @@
+-- Copy this file to ~/.config/hypr/bindings.local.lua for machine-specific apps.
+-- Add bindings only for programs installed on that machine.
+--
+-- Example:
+-- o.bind("SUPER + SHIFT + V", "VSCode", { launch = "code", focus = "^code$" })

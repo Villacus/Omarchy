@@ -1,0 +1,5 @@
+-- Copy this file to ~/.config/hypr/autostart.local.lua for machine-specific services.
+-- Keep optional programs disabled unless they are installed and verified.
+--
+-- Example (only when Wallpaper Engine and the Steam library are available):
+-- o.launch_on_start((os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")) .. "/scripts/restore-wallpapers")
