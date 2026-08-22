@@ -7,9 +7,9 @@
           "id": "omarchy.indicators"
         },
         {
-          "format": "HH:mm",
-          "formatAlt": "d MMMM 'W'ww yyyy",
           "id": "omarchy.clock",
+          "format": "h:mm AP",
+          "formatAlt": "d MMMM 'W'ww yyyy",
           "verticalFormat": "HH\n—\nmm"
         },
         {
@@ -92,9 +92,6 @@
     },
     {
       "id": "bobbynicholas.omaland"
-    },
-    {
-      "id": "io.github.dkgamer02ai.wallpaper-engine"
     }
   ],
   "version": 1

@@ -35,7 +35,4 @@
     "aliases":["background","wallpaper"],
     "action":"${XDG_CONFIG_HOME:-$HOME/.config}/scripts/omarchy-background-selector"
   },
-// omarchy-we-menu-start
-  "style.wallpaper-engine": {"icon":"󰸉","label":"Wallpaper Engine","keywords":"live animated video scene we steam workshop omatrix dial","when":"test -x \"$(command -v omarchy-we)\"","action":"omarchy-we omatrix"},
-// omarchy-we-menu-end
 }
