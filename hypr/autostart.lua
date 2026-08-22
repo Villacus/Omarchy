@@ -6,3 +6,10 @@
 if o.cmd_present("hyprsunset") then
 	o.launch_on_start("hyprsunset")
 end
+
+local config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
+local config_sync = config_home .. "/scripts/config-sync-pull"
+
+if o.cmd_present("git") then
+	o.launch_on_start(config_sync)
+end

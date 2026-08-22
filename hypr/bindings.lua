@@ -3,6 +3,10 @@
 hl.unbind("SUPER + SHIFT + N")
 hl.unbind("SUPER + SHIFT + S")
 hl.unbind("SUPER + TAB") -- Default: next workspace, replaced by the mirador overview
+hl.unbind("SUPER + SHIFT + M")
+hl.unbind("SUPER + SHIFT + G")
+hl.unbind("SUPER + SHIFT + P")
+
 o.bind("SUPER + ALT + RETURN", "Tmux", { omarchy = "terminal-tmux" })
 o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { omarchy = "nautilus-cwd" })
 o.bind("SUPER + SHIFT + N", "Editor", { omarchy = "editor" })
