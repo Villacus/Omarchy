@@ -53,6 +53,7 @@
 !/scripts/restore-wallpapers
 !/scripts/set-wallpaper-engine
 !/scripts/setup-wallpaper-engine-previews.sh
+!/scripts/config-sync-pull
 !/starship.toml
 
 # Files outside ~/.config, linked by install.sh.

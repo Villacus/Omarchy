@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Pull the shared config after Hyprland starts without touching local work.
+
+set -u
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+if [[ ! -d "$config_home/.git" ]]; then
+  exit 0
+fi
+
+cd "$config_home" || exit 0
+
+# Never hide or overwrite edits made locally on this machine.
+if [[ -n "$(git status --porcelain)" ]]; then
+  exit 0
+fi
+
+# The network may still be coming up when Hyprland starts.
+for attempt in 1 2 3; do
+  if git pull --ff-only; then
+    exit 0
+  fi
+  sleep 10
+done
+
+exit 1
