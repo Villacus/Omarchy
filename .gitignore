@@ -37,6 +37,7 @@
 !/omarchy/
 /omarchy/*
 !/omarchy/shell.json
+!/omarchy/branding/
 !/omarchy/extensions/
 /omarchy/extensions/*
 !/omarchy/extensions/menu.sh
