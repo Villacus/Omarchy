@@ -56,6 +56,7 @@
 !/scripts/setup-wallpaper-engine-previews.sh
 !/scripts/config-sync-pull
 !/starship.toml
+!/discord-quest.js
 
 # Files outside ~/.config, linked by install.sh.
 !/home/

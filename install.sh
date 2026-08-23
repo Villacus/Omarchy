@@ -16,8 +16,10 @@ usage() {
   cat <<'EOF'
 Uso: ./install.sh [--force] [--help]
 
-Enlaza los tres archivos que viven fuera de ~/.config:
+Enlaza los cuatro archivos que viven fuera de ~/.config:
   ~/.bashrc     -> ~/.config/home/.bashrc
+  ~/.zshrc      -> ~/.config/home/.zshrc
+  (zsh se instala como shell predeterminada con: chsh -s /usr/bin/zsh)
   ~/.gitconfig  -> ~/.config/home/.gitconfig
   ~/.opencode   -> ~/.config/home/.opencode
 
@@ -85,6 +87,7 @@ required=(
   btop/btop.conf
   fastfetch/config.jsonc
   home/.bashrc
+  home/.zshrc
   home/.gitconfig
   home/.opencode/AGENTS.md
   hypr/hyprland.lua
@@ -109,6 +112,7 @@ done
 
 link_targets=(
   "$HOME/.bashrc:$ROOT/home/.bashrc"
+  "$HOME/.zshrc:$ROOT/home/.zshrc"
   "$HOME/.gitconfig:$ROOT/home/.gitconfig"
   "$HOME/.opencode:$ROOT/home/.opencode"
 )
@@ -130,6 +134,7 @@ fi
 
 printf '%b\n' "${GREEN}=== Instalando enlaces de ~/.config ===${NC}"
 link_home_file "$HOME/.bashrc" "$ROOT/home/.bashrc"
+link_home_file "$HOME/.zshrc" "$ROOT/home/.zshrc"
 link_home_file "$HOME/.gitconfig" "$ROOT/home/.gitconfig"
 link_home_file "$HOME/.opencode" "$ROOT/home/.opencode"
 
@@ -139,4 +144,4 @@ printf '%b\n' "${YELLOW}Para adaptar hardware, copia hypr/monitors.local.lua.exa
 exit 0
 
 # Keep the script intentionally short: all sources are preflighted above and
-# only the three external home links are managed here.
+# only the four external links are managed here.

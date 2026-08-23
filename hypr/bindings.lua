@@ -6,6 +6,7 @@ hl.unbind("SUPER + TAB") -- Default: next workspace, replaced by the mirador ove
 hl.unbind("SUPER + SHIFT + M")
 hl.unbind("SUPER + SHIFT + G")
 hl.unbind("SUPER + SHIFT + P")
+hl.unbind("SUPER + SHIFT + C")
 
 o.bind("SUPER + ALT + RETURN", "Tmux", { omarchy = "terminal-tmux" })
 o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { omarchy = "nautilus-cwd" })
@@ -13,7 +14,6 @@ o.bind("SUPER + SHIFT + N", "Editor", { omarchy = "editor" })
 
 o.bind("SUPER + SHIFT + C", "Calendar", { webapp = "https://calendar.google.com/" })
 o.bind("SUPER + SHIFT + E", "Email", { webapp = "https://mail.google.com/mail/u/0/" })
-o.bind("SUPER + SHIFT + Y", "YouTube", { webapp = "https://youtube.com/" })
 o.bind("SUPER + SHIFT + U", "WhatsApp", { webapp = "https://web.whatsapp.com/", focus = true })
 o.bind("SUPER + SHIFT + G", "Github", { webapp = "https://github.com/Villacus/" })
 o.bind("SUPER + SHIFT + P", "Homelab", { webapp = "https://homepage.tailf45616.ts.net" })

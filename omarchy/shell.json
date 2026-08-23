@@ -8,7 +8,7 @@
         },
         {
           "id": "omarchy.clock",
-          "format": "h:mm AP",
+          "format": "dddd HH:mm",
           "formatAlt": "d MMMM 'W'ww yyyy",
           "verticalFormat": "HH\n—\nmm"
         },
