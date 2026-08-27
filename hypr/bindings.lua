@@ -27,3 +27,4 @@ o.bind("SUPER + mouse:275", "Mute microphone", "omarchy audio input mute")
 -- (omarchy/plugins/ stays local), so on a machine without it the shell simply
 -- ignores the toggle and the key does nothing.
 o.bind("SUPER + TAB", "Workspace overview", "omarchy-shell shell toggle mirador '{}'")
+o.bind("SUPER + SHIFT + L", "Lock screen explorer", "omarchy-shell lock explore")
