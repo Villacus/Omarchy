@@ -13,3 +13,6 @@ local config_sync = config_home .. "/scripts/config-sync-pull"
 if o.cmd_present("git") then
 	o.launch_on_start(config_sync)
 end
+
+-- Restore live Wallpaper Engine wallpaper on login (omarchy-wallpaper-engine)
+o.launch_on_start("omarchy-we launch")
