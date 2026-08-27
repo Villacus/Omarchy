@@ -19,6 +19,7 @@ fi
 # The network may still be coming up when Hyprland starts.
 for attempt in 1 2 3; do
   if git pull --ff-only; then
+    git submodule update --init --recursive
     exit 0
   fi
   sleep 10

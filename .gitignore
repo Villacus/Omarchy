@@ -42,6 +42,7 @@
 /omarchy/extensions/*
 !/omarchy/extensions/menu.sh
 !/omarchy/extensions/omarchy-menu.jsonc
+!/omarchy/plugins
 !/scripts/
 /scripts/*
 !/scripts/mpris-cliamp.sh

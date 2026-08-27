@@ -1,0 +1,30 @@
+[submodule "omarchy/plugins/bobbynicholas.omaland"]
+	path = omarchy/plugins/bobbynicholas.omaland
+	url = https://github.com/bobby-nicholas/omaland.git
+[submodule "omarchy/plugins/crmne.mpris"]
+	path = omarchy/plugins/crmne.mpris
+	url = https://github.com/crmne/omarchy-mpris.git
+[submodule "omarchy/plugins/glass-bar-omarchy"]
+	path = omarchy/plugins/glass-bar-omarchy
+	url = https://github.com/Pmacdon15/glass-bar-omarchy.git
+[submodule "omarchy/plugins/io.github.dkgamer02ai.wallpaper-engine"]
+	path = omarchy/plugins/io.github.dkgamer02ai.wallpaper-engine
+	url = https://github.com/dkgamer02ai/omarchy-wallpaper-engine.git
+[submodule "omarchy/plugins/io.github.elevate08.qs-bitwarden-cli"]
+	path = omarchy/plugins/io.github.elevate08.qs-bitwarden-cli
+	url = https://github.com/Elevate08/qs-bitwarden-cli.git
+[submodule "omarchy/plugins/io.github.ricky.whatsapp"]
+	path = omarchy/plugins/io.github.ricky.whatsapp
+	url = https://github.com/srineshr1/omarchy-whatsapp.git
+[submodule "omarchy/plugins/io.github.sirjul1337.lock-explorer"]
+	path = omarchy/plugins/io.github.sirjul1337.lock-explorer
+	url = https://github.com/SirJul1337/omarchy-lock-explorer.git
+[submodule "omarchy/plugins/io.github.tyrichards.workspaces-jap"]
+	path = omarchy/plugins/io.github.tyrichards.workspaces-jap
+	url = https://github.com/TyRichards/omarchy-workspaces-jap.git
+[submodule "omarchy/plugins/mirador"]
+	path = omarchy/plugins/mirador
+	url = https://github.com/sanjyay/Mirador.git
+[submodule "omarchy/plugins/wian47.removable-drives"]
+	path = omarchy/plugins/wian47.removable-drives
+	url = https://github.com/Wian47/omarchy-removable-drives.git
