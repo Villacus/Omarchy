@@ -153,5 +153,13 @@ hl.config({
       enabled = false,
     },
   },
+
+  general = {
+    border_size = 2,
+    float_gaps = 38,
+    gaps_in = 1,
+    gaps_out = 0,
+    gaps_workspaces = 0,
+  },
 })
 -- <<< omaland managed block <<<
