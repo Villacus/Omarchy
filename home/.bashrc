@@ -14,6 +14,9 @@ else
 fi
 source "$OMARCHY_PATH/default/bash/rc"
 
+# Secrets: cargar .env local (no commiteado) si existe
+[[ -f "${HOME}/.config/home/.env" ]] && set -a && source "${HOME}/.config/home/.env" && set +a
+
 # Add your own exports, aliases, and functions here.
 #
 # Make an alias for invoking commands you use constantly

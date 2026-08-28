@@ -1,0 +1,13 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://omniroute.tailf45616.ts.net",
+    "ANTHROPIC_MODEL": "claudio",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "claudio",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claudio",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claudio",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claudio",
+    "CLAUDE_CODE_DISABLE_PARALLEL_TOOLS": "true"
+  },
+  "autoCompactWindow": 800000,
+  "theme": "dark"
+}
