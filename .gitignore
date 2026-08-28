@@ -64,9 +64,13 @@
 /home/*
 !/home/.bashrc
 !/home/.gitconfig
+!/home/.gitignore
 !/home/.opencode/
 /home/.opencode/*
 !/home/.opencode/AGENTS.md
+!/home/.claude/
+/home/.claude/*
+!/home/.claude/settings.json
 
 # Never store machine-specific SSH material or desktop defaults.
 /home/.ssh/

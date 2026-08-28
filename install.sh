@@ -16,12 +16,16 @@ usage() {
   cat <<'EOF'
 Uso: ./install.sh [--force] [--help]
 
-Enlaza los cuatro archivos que viven fuera de ~/.config:
-  ~/.bashrc     -> ~/.config/home/.bashrc
-  ~/.zshrc      -> ~/.config/home/.zshrc
+Enlaza los archivos que viven fuera de ~/.config:
+  ~/.bashrc              -> ~/.config/home/.bashrc
+  ~/.zshrc               -> ~/.config/home/.zshrc
   (zsh se instala como shell predeterminada con: chsh -s /usr/bin/zsh)
-  ~/.gitconfig  -> ~/.config/home/.gitconfig
-  ~/.opencode   -> ~/.config/home/.opencode
+  ~/.gitconfig           -> ~/.config/home/.gitconfig
+  ~/.opencode            -> ~/.config/home/.opencode
+  ~/.claude/settings.json -> ~/.config/home/.claude/settings.json
+
+La API key de Claude va en ~/.config/home/.env (ignorado por git; se
+carga en .bashrc). El settings.json se versionea sin secrets.
 
 Los archivos de ~/.config son el repositorio: no se copian ni se enlazan.
 
@@ -90,6 +94,7 @@ required=(
   home/.zshrc
   home/.gitconfig
   home/.opencode/AGENTS.md
+  home/.claude/settings.json
   hypr/hyprland.lua
   hypr/monitors.lua
   omarchy/shell.json
@@ -115,6 +120,7 @@ link_targets=(
   "$HOME/.zshrc:$ROOT/home/.zshrc"
   "$HOME/.gitconfig:$ROOT/home/.gitconfig"
   "$HOME/.opencode:$ROOT/home/.opencode"
+  "$HOME/.claude/settings.json:$ROOT/home/.claude/settings.json"
 )
 
 if [[ "$FORCE" != true ]]; then
@@ -137,6 +143,7 @@ link_home_file "$HOME/.bashrc" "$ROOT/home/.bashrc"
 link_home_file "$HOME/.zshrc" "$ROOT/home/.zshrc"
 link_home_file "$HOME/.gitconfig" "$ROOT/home/.gitconfig"
 link_home_file "$HOME/.opencode" "$ROOT/home/.opencode"
+link_home_file "$HOME/.claude/settings.json" "$ROOT/home/.claude/settings.json"
 
 printf '%b\n' "${GREEN}=== Instalación completada ===${NC}"
 printf '%b\n' "${YELLOW}Los archivos de ~/.config son el repositorio; no se copian ni se enlazan.${NC}"
