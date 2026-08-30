@@ -28,3 +28,4 @@ o.bind("SUPER + mouse:275", "Mute microphone", "omarchy audio input mute")
 -- ignores the toggle and the key does nothing.
 o.bind("SUPER + TAB", "Workspace overview", "omarchy-shell shell toggle mirador '{}'")
 o.bind("SUPER + SHIFT + L", "Lock screen explorer", "omarchy-shell lock explore")
+o.bind("SUPER + CTRL + ALT + SPACE", "Wallpaper engine", "omarchy-we menu")
