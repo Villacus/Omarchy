@@ -8,6 +8,17 @@
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claudio",
     "CLAUDE_CODE_DISABLE_PARALLEL_TOOLS": "true"
   },
+  "extraKnownMarketplaces": {
+    "ecc": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/affaan-m/ECC.git"
+      }
+    }
+  },
   "autoCompactWindow": 800000,
-  "theme": "dark"
+  "theme": "dark",
+  "enabledPlugins": {
+    "ecc@ecc": true
+  }
 }
