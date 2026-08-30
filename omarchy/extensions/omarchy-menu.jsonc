@@ -64,5 +64,6 @@
   "trigger.toggle.window-gaps": {"parent":"trigger.toggle","label":"Window Gaps","action":"omarchy-sensei run --action 'toggle-window-gaps' --title 'Toggle window gaps' --shortcut 'SUPER SHIFT + BACKSPACE' -- 'omarchy-hyprland-window-gaps-toggle'","icon":""},
   "trigger.toggle.workspace-layout": {"parent":"trigger.toggle","label":"Workspace Layout","action":"omarchy-sensei run --action 'toggle-workspace-layout' --title 'Toggle workspace layout' --shortcut 'SUPER + L' -- 'omarchy-hyprland-workspace-layout-toggle'","icon":"󱂬"},
   "trigger.transcode": {"parent":"trigger","label":"Transcode","action":"omarchy-sensei run --action 'transcode' --title 'Transcode' --shortcut 'SUPER CTRL + PERIOD' -- 'omarchy-transcode'","icon":"󰧸"},
+  "style.wallpaper-engine": {"parent":"style","label":"Wallpaper Engine","action":"omarchy-sensei run --action 'wallpaper-engine' --title 'Wallpaper engine' --shortcut 'SUPER CTRL ALT + SPACE' -- 'omarchy-we omatrix'","icon":"󰸉","when":"test -x \"$(command -v omarchy-we)\""},
   // END OMARCHY SENSEI
 }
