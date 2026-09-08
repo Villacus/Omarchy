@@ -27,10 +27,12 @@ alias clear='clear && fastfetch'
 alias killmc='kill $(pgrep -f theseus.jar) 2>/dev/null; sleep 1; kill -9 $(pgrep -f theseus.jar) 2>/dev/null; echo "Minecraft cerrado"'
 
 alias quest='cat ~/.config/discord-quest.js | wl-copy && echo "Script copiado. Pega en la consola de Discord (Ctrl+V)"'
+alias pwdcp='pwd | wl-copy'
 
 alias p='ssh villacus@pilla'
 alias i='ssh itziar@Cachyilla'
 
+alias vpn='sudo $HOME/.config/scripts/conectar_vpn.sh'
 alias claudio=claude
 alias claud=claude
 alias c=claude
