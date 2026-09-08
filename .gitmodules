@@ -28,3 +28,9 @@
 [submodule "omarchy/plugins/wian47.removable-drives"]
 	path = omarchy/plugins/wian47.removable-drives
 	url = https://github.com/Wian47/omarchy-removable-drives.git
+[submodule "omarchy/plugins/harbefas.system-stats"]
+	path = omarchy/plugins/harbefas.system-stats
+	url = https://github.com/harbefas/omarchy-system-stats.git
+[submodule "omarchy/plugins/io.github.iryzhkov.glide-workspaces"]
+	path = omarchy/plugins/io.github.iryzhkov.glide-workspaces
+	url = https://github.com/iryzhkov/omarchy-glide-workspaces.git

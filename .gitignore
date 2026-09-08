@@ -44,18 +44,6 @@
 !/omarchy/extensions/omarchy-menu.jsonc
 !/omarchy/plugins
 !/scripts/
-/scripts/*
-!/scripts/mpris-cliamp.sh
-!/scripts/next.sh
-!/scripts/omarchy-background-selector
-!/scripts/omarchy-wallpaper-engine
-!/scripts/player-volume.sh
-!/scripts/playpause.sh
-!/scripts/prev.sh
-!/scripts/restore-wallpapers
-!/scripts/set-wallpaper-engine
-!/scripts/setup-wallpaper-engine-previews.sh
-!/scripts/config-sync-pull
 !/starship.toml
 !/discord-quest.js
 

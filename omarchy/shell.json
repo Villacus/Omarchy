@@ -35,10 +35,13 @@
       ],
       "right": [
         {
+          "id": "wian47.removable-drives"
+        },
+        {
           "id": "omarchy.tray"
         },
         {
-          "id": "wian47.removable-drives"
+          "id": "io.github.villacus.automode"
         },
         {
           "id": "io.github.ricky.whatsapp"
@@ -66,6 +69,9 @@
               "enabled": true
             }
           }
+        },
+        {
+          "id": "harbefas.system-stats"
         },
         {
           "id": "omarchy.bluetooth"
