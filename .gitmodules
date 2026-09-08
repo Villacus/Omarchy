@@ -34,3 +34,6 @@
 [submodule "omarchy/plugins/io.github.iryzhkov.glide-workspaces"]
 	path = omarchy/plugins/io.github.iryzhkov.glide-workspaces
 	url = https://github.com/iryzhkov/omarchy-glide-workspaces.git
+[submodule "omarchy/plugins/io.github.villacus.automode"]
+	path = omarchy/plugins/io.github.villacus.automode
+	url = git@github.com:Villacus/omarchy-automode.git
