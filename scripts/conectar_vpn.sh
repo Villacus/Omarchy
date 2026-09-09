@@ -3,7 +3,11 @@
 # Configuración
 set timeout 30
 
-set fp [open ".env" r]
+# Obtener la ruta absoluta del directorio donde está el script
+set script_dir [file dirname [file normalize [info script]]]
+set env_file [file join $script_dir ".env"]
+
+set fp [open $env_file r]
 while {[gets $fp line] >= 0} {
     if {[regexp {^SECRET_KEY=(.*)$} $line match value]} {
         set secret_key $value
