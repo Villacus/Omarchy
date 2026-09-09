@@ -2,7 +2,14 @@
 
 # Configuración
 set timeout 30
-set secret_key "M52RN2OVTAZA57PC"
+
+set fp [open ".env" r]
+while {[gets $fp line] >= 0} {
+    if {[regexp {^SECRET_KEY=(.*)$} $line match value]} {
+        set secret_key $value
+    }
+}
+close $fp
 set conf_file "/home/villacus/.config/ehu-vpn.conf"
 
 # Generar el código OTP
