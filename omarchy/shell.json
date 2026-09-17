@@ -4,6 +4,9 @@
     "layout": {
       "center": [
         {
+          "id": "air.auto-cafe"
+        },
+        {
           "id": "omarchy.indicators"
         },
         {
@@ -17,6 +20,9 @@
         },
         {
           "id": "omarchy.weather"
+        },
+        {
+          "id": "omarchy.media"
         },
         {
           "id": "crmne.mpris"
@@ -41,13 +47,7 @@
           "id": "omarchy.tray"
         },
         {
-          "id": "air.auto-cafe"
-        },
-        {
           "id": "io.github.villacus.automode"
-        },
-        {
-          "id": "io.github.ricky.whatsapp"
         },
         {
           "id": "omarchy.tailscale"

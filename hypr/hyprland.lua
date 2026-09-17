@@ -6,6 +6,7 @@ dofile((os.getenv("OMARCHY_PATH") or "/usr/share/omarchy") .. "/default/hypr/boo
 -- Keep Omarchy's built-in bindings and add personal bindings below.
 -- Disable only a conflicting binding in hypr/bindings.lua when needed.
 
+
 -- Load Omarchy defaults.
 require("default.hypr.omarchy")
 
