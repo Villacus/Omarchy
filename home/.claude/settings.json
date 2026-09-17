@@ -20,5 +20,6 @@
   "theme": "dark",
   "enabledPlugins": {
     "ecc@ecc": true
-  }
+  },
+  "hooks": {"SessionStart":[{"matcher":"*","hooks":[{"type":"command","command":"bash '/home/villacus/.claude/hooks/herdr-agent-state.sh' session","timeout":10}]}]}
 }

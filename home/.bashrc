@@ -35,6 +35,7 @@ alias i='ssh itziar@Cachyilla'
 alias vpn='sudo $HOME/.config/scripts/conectar_vpn.sh'
 alias bildu='sudo mount -t cifs //10.10.63.23/home /home/villacus/BILDU -o credentials=/home/villacus/.config/.smbcred,uid=1000,gid=1000,iocharset=utf8,sec=ntlmssp,vers=2.1'
 alias des='sudo umount /home/villacus/BILDU'
+alias tamagochi='ssh root@192.168.56.111'
 
 alias claudio=claude
 alias claud=claude

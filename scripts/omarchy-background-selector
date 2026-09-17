@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+background="$(omarchy-theme-bg-switcher)"
+[[ -n "$background" ]] && omarchy-theme-bg-set "$background"
