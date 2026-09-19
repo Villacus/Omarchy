@@ -24,6 +24,8 @@ source "$OMARCHY_PATH/default/bash/rc"
 fastfetch
 alias clear='clear && fastfetch'
 
+alias gs='git status --short'
+
 alias killmc='kill $(pgrep -f theseus.jar) 2>/dev/null; sleep 1; kill -9 $(pgrep -f theseus.jar) 2>/dev/null; echo "Minecraft cerrado"'
 
 alias quest='cat ~/.config/discord-quest.js | wl-copy && echo "Script copiado. Pega en la consola de Discord (Ctrl+V)"'
