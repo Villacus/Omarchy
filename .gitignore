@@ -9,6 +9,10 @@
 !/uninstall.sh
 
 # Managed ~/.config entries.
+!/nvim/
+!/nvim/**
+!/tmux/
+!/tmux/tmux.conf
 !/alacritty/
 /alacritty/*
 !/alacritty/alacritty.toml
