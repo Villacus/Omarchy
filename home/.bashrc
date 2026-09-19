@@ -42,3 +42,6 @@ alias tamagochi='ssh root@192.168.56.111'
 alias claudio=claude
 alias claud=claude
 alias c=claude
+
+alias cat='bat'
+alias find='fzf'
