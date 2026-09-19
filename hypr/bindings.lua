@@ -8,7 +8,6 @@ hl.unbind("SUPER + SHIFT + G")
 hl.unbind("SUPER + SHIFT + P")
 hl.unbind("SUPER + SHIFT + C")
 
-o.bind("SUPER + ALT + RETURN", "Tmux", { omarchy = "terminal-tmux" })
 o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { omarchy = "nautilus-cwd" })
 o.bind("SUPER + SHIFT + N", "Editor", { omarchy = "editor" })
 
@@ -18,6 +17,7 @@ o.bind("SUPER + SHIFT + U", "WhatsApp", { webapp = "https://web.whatsapp.com/", 
 o.bind("SUPER + SHIFT + G", "Github", { webapp = "https://github.com/Villacus/" })
 o.bind("SUPER + SHIFT + P", "Homelab", { webapp = "https://homepage.tailf45616.ts.net" })
 o.bind("SUPER + SHIFT + M", "Navidrome", { webapp = "https://navidrome.tailf45616.ts.net" })
+o.bind("SUPER + ALT + V", "VPN EHU (on/off)", [[xdg-terminal-exec bash -c '$HOME/.config/scripts/conectar_vpn.sh toggle || read -rp "Error, Enter para cerrar"; sleep 2']])
 
 o.bind("SUPER + SHIFT + S", "Screenshot area to clipboard", "omarchy-capture-screenshot region copy")
 o.bind("SUPER + ALT + A", "Switch audio output", "omarchy-audio-output-switch")
