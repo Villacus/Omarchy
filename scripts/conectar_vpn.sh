@@ -5,7 +5,7 @@ set timeout 30
 
 # Asegurar que el montaje se desmonte al salir
 trap {
-    exec sudo umount /home/villacus/BILDU
+    exec sudo umount -f /home/villacus/BILDU
     exit
 } {SIGINT SIGTERM}
 
