@@ -48,6 +48,8 @@
 !/omarchy/extensions/omarchy-menu.jsonc
 !/omarchy/plugins
 !/scripts/
+!/docs/
+!/docs/**
 !/starship.toml
 !/discord-quest.js
 
