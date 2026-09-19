@@ -8,18 +8,30 @@
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claudio",
     "CLAUDE_CODE_DISABLE_PARALLEL_TOOLS": "true"
   },
+  "enabledPlugins": {
+    "ecc@ecc": true,
+    "ponytail@ponytail": true
+  },
   "extraKnownMarketplaces": {
     "ecc": {
       "source": {
         "source": "git",
         "url": "https://github.com/affaan-m/ECC.git"
       }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
     }
   },
   "autoCompactWindow": 800000,
   "theme": "dark",
-  "enabledPlugins": {
-    "ecc@ecc": true
-  },
-  "hooks": {"SessionStart":[{"matcher":"*","hooks":[{"type":"command","command":"bash '/home/villacus/.claude/hooks/herdr-agent-state.sh' session","timeout":10}]}]}
+"hooks": {"SessionStart":[{"matcher":"*","hooks":[{"type":"command","command":"bash '/home/villacus/.claude/hooks/herdr-agent-state.sh' session","timeout":10}]}]},
+  "permissions": {
+    "allow": [
+      "Bash(graphify *)"
+    ]
+  }
 }
