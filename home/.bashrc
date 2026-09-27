@@ -21,8 +21,37 @@ source "$OMARCHY_PATH/default/bash/rc"
 #
 # Make an alias for invoking commands you use constantly
 # alias p='python'
+
+# Skip Starship entirely on slow shared filesystems.
+if declare -F starship_precmd >/dev/null; then
+  eval "$(declare -f starship_precmd | sed 's/^starship_precmd /__starship_precmd_original /')"
+  starship_precmd() {
+    case "$PWD" in
+      "$HOME/BILDU"|"$HOME/BILDU"/*|"$HOME/NAS"|"$HOME/NAS"/*)
+        PS1='\[\e[36m\]\w ❯ \[\e[0m\]'
+        ;;
+      *)
+        __starship_precmd_original
+        ;;
+    esac
+  }
+fi
+
 fastfetch
 alias clear='clear && fastfetch'
+
+# Use plain ls on network mounts; eza's metadata/icons cause extra CIFS requests.
+unalias ls 2>/dev/null
+ls() {
+  case "$PWD" in
+    "$HOME/BILDU"|"$HOME/BILDU"/*|"$HOME/NAS"|"$HOME/NAS"/*)
+      command ls -lh --color=auto --group-directories-first "$@"
+      ;;
+    *)
+      command eza -lh --group-directories-first --icons=auto "$@"
+      ;;
+  esac
+}
 
 alias gs='git status --short'
 
