@@ -14,4 +14,4 @@ La configuración central se encuentra en `tmux.conf` y está ajustada para:
 
 Tmux es fundamental para el mantenimiento del entorno de homelab. Permite mantener sesiones activas en la Raspberry Pi (pilla) mediante SSH, asegurando que los procesos de despliegue o logs no se interrumpan al cerrar la conexión.
 
-Véase [[Homelab/Despliegue|Despliegue de Servicios]] para el flujo de trabajo estándar utilizando Tmux sobre SSH.
+Véase [[Despliegue|Despliegue de Servicios]] para el flujo de trabajo estándar utilizando Tmux sobre SSH.

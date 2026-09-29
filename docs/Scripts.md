@@ -1,6 +1,6 @@
 # Scripts de Utilidad y Automatización
 
-El directorio `~/.config/scripts/` agrupa los scripts auxiliares encargados de la automatización del entorno en [[Hypr|Hyprland]] y [[Readme|Omarchy]].
+El directorio `~/.config/scripts/` agrupa los scripts auxiliares encargados de la automatización del entorno en [[Hypr|Hyprland]] y [[200 - Dotfiles/Readme|Omarchy]].
 
 ## Funciones Principales
 

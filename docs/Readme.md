@@ -76,4 +76,4 @@ No se versionan claves privadas, `known_hosts`, secretos, archivos `docker-compo
 
 ## Conexión con Homelab
 
-Este entorno de escritorio está optimizado para interactuar con la infraestructura del servidor doméstico. El flujo de despliegue de servicios y la conectividad segura se detallan en [[Homelab/Despliegue|Despliegue de Servicios]].
+Este entorno de escritorio está optimizado para interactuar con la infraestructura del servidor doméstico. El flujo de despliegue de servicios y la conectividad segura se detallan en [[Despliegue|Despliegue de Servicios]].

@@ -4,7 +4,7 @@ Este directorio contiene la documentación técnica de la configuración persona
 
 ## Documentación General y Guías
 - [[Claude|Claude.md]] — Guía operativa y modelo de trabajo con asistentes de inteligencia artificial en el repositorio.
-- [[Readme|Readme.md]] — Resumen general de la arquitectura, estructura de archivos y flujo de instalación.
+- [[200 - Dotfiles/Readme|Readme.md]] — Resumen general de la arquitectura, estructura de archivos y flujo de instalación.
 
 ## Componentes de Entorno y Ventanas
 - [[Nvim|Neovim (nvim)]] — Configuración avanzada basada en [LazyVim](https://www.lazyvim.org/).
@@ -18,4 +18,4 @@ Este directorio contiene la documentación técnica de la configuración persona
 
 ## Conexión con Homelab
 La configuración de los dotfiles está diseñada para operar de forma fluida con el entorno de servidor doméstico:
-- [[Homelab/Despliegue|Despliegue de Servicios]] — Flujo de trabajo para contenedores Docker, túneles seguros mediante [Tailscale](https://tailscale.com/) y monitorización en la Raspberry Pi.
+- [[Despliegue|Despliegue de Servicios]] — Flujo de trabajo para contenedores Docker, túneles seguros mediante [Tailscale](https://tailscale.com/) y monitorización en la Raspberry Pi.
