@@ -8,8 +8,27 @@
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claudio",
     "CLAUDE_CODE_DISABLE_PARALLEL_TOOLS": "true"
   },
+  "permissions": {
+    "allow": [
+      "Bash(graphify *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/home/villacus/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
-    "ecc@ecc": true,
+    "ecc@ecc": false,
     "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
@@ -26,12 +45,11 @@
       }
     }
   },
+  "modelSettings": {
+    "claudio": {
+      "effortLevel": "medium"
+    }
+  },
   "autoCompactWindow": 800000,
-  "theme": "dark",
-"hooks": {"SessionStart":[{"matcher":"*","hooks":[{"type":"command","command":"bash '/home/villacus/.claude/hooks/herdr-agent-state.sh' session","timeout":10}]}]},
-  "permissions": {
-    "allow": [
-      "Bash(graphify *)"
-    ]
-  }
+  "theme": "dark"
 }
