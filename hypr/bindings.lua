@@ -8,6 +8,10 @@ hl.unbind("SUPER + SHIFT + G")
 hl.unbind("SUPER + SHIFT + P")
 hl.unbind("SUPER + SHIFT + C")
 
+hl.bind("F8", hl.dsp.pass({ window = "class:^(discord)$" }))
+hl.bind("F8", hl.dsp.global("discord:discord-toggle-mute"))
+
+
 o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { omarchy = "nautilus-cwd" })
 o.bind("SUPER + SHIFT + N", "Editor", { omarchy = "editor" })
 
