@@ -4,7 +4,7 @@
 [init]
 	defaultBranch = main
 [alias]
-	tree = log --graph --decorate --all --oneline
+	tree = log --graph --decorate --all --oneline -10
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f

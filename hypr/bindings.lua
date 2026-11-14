@@ -7,6 +7,7 @@ hl.unbind("SUPER + SHIFT + M")
 hl.unbind("SUPER + SHIFT + G")
 hl.unbind("SUPER + SHIFT + P")
 hl.unbind("SUPER + SHIFT + C")
+hl.unbind("SUPER + SHIFT + E")
 
 hl.bind("F8", hl.dsp.pass({ window = "class:^(discord)$" }))
 hl.bind("F8", hl.dsp.global("discord:discord-toggle-mute"))
@@ -20,7 +21,7 @@ o.bind("SUPER + SHIFT + E", "Email", { webapp = "https://mail.google.com/mail/u/
 o.bind("SUPER + SHIFT + U", "WhatsApp", { webapp = "https://web.whatsapp.com/", focus = true })
 o.bind("SUPER + SHIFT + G", "Github", { webapp = "https://github.com/Villacus/" })
 o.bind("SUPER + SHIFT + P", "Homelab", { webapp = "https://homepage.tailf45616.ts.net" })
-o.bind("SUPER + SHIFT + M", "Navidrome", { webapp = "https://navidrome.tailf45616.ts.net" })
+o.bind("SUPER + SHIFT + M", "Navidrome", { webapp = "https://navidrome.tailf45616.ts.net", focus = true })
 o.bind("SUPER + ALT + V", "VPN EHU (on/off)", [[xdg-terminal-exec bash -c '$HOME/.config/scripts/conectar_vpn.sh toggle || read -rp "Error, Enter para cerrar"; sleep 2']])
 
 o.bind("SUPER + SHIFT + S", "Screenshot area to clipboard", "omarchy-capture-screenshot region copy")
@@ -32,4 +33,4 @@ o.bind("SUPER + mouse:275", "Mute microphone", "omarchy audio input mute")
 -- ignores the toggle and the key does nothing.
 o.bind("SUPER + TAB", "Workspace overview", "omarchy-shell shell toggle mirador '{}'")
 o.bind("SUPER + SHIFT + L", "Lock screen explorer", "omarchy-shell lock explore")
-o.bind("SUPER + CTRL + ALT + SPACE", "Wallpaper engine", "omarchy-we menu")
+o.bind("SUPER + CTRL + ALT + SPACE", "Wallpaper engine", "omarchy-we omatrix")

@@ -13,7 +13,29 @@
           "verticalFormat": "HH\n—\nmm"
         },
         {
-          "id": "omarchy.keyboard-layout"
+          "id": "omarchy.elsewhen",
+          "cities": [
+            {
+              "name": "Madrid",
+              "zone": "Europe/Madrid"
+            },
+            {
+              "name": "Dubai",
+              "zone": "Asia/Dubai"
+            },
+            {
+              "name": "Tokyo",
+              "zone": "Asia/Tokyo"
+            },
+            {
+              "name": "Los Angeles",
+              "zone": "America/Los_Angeles"
+            },
+            {
+              "name": "New York",
+              "zone": "America/New_York"
+            }
+          ]
         },
         {
           "id": "omarchy.weather"
@@ -38,6 +60,9 @@
       ],
       "right": [
         {
+          "id": "omarchy.keyboard-layout"
+        },
+        {
           "id": "wian47.removable-drives"
         },
         {
@@ -48,10 +73,6 @@
         },
         {
           "id": "omarchy.tailscale"
-        },
-        {
-          "id": "io.github.elevate08.qs-bitwarden-cli",
-          "pinUnlock": true
         },
         {
           "id": "omarchy.agents",
@@ -88,7 +109,10 @@
         {
           "id": "omarchy.monitor"
         }
-      ]
+      ],
+      "centerBegin": [],
+      "centerEnd": [],
+      "tray": []
     },
     "position": "top",
     "transparent": false,
