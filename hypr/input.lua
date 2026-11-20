@@ -6,8 +6,8 @@
 hl.config({
 	input = {
 		-- Use multiple keyboard layouts and switch between them with Left Alt + Right Alt.
-		kb_layout = "es",
-		kb_options = "shift:both_capslock_cancel",
+    kb_layout = "es,us",
+		kb_options = "grp:alts_toggle,shift:both_capslock_cancel",
 
 		-- Use a specific keyboard variant if needed (e.g. intl for international keyboards).
 		kb_variant = "",
